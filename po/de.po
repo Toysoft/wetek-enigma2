@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: tuxbox-enigma 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-11-05 14:38+0000\n"
-"PO-Revision-Date: 2015-08-30 15:01+0100\n"
+"PO-Revision-Date: 2015-08-31 20:24+0100\n"
 "Last-Translator: mike99 <mike99@mail.to>\n"
 "Language-Team: openATV\n"
 "Language: de\n"
@@ -4130,12 +4130,17 @@ msgstr "Installiere Paketinhalt... Bitte warten."
 msgid "Instant recording..."
 msgstr "Sofortaufnahme"
 
-#
+#: Recordings.py:156
 msgid "Instant record location"
 msgstr "Verzeichnis der Sofortaufnahme"
 
+#: Recordings.py:139
 msgid "Instant recording location"
 msgstr "Ziel für Sofortaufnahmen"
+
+#: Recordings.py:205
+msgid "Instant recordings location"
+msgstr "Speicherort für Sofortaufnahmen"
 
 msgid "Interface"
 msgstr "Schnittstelle"
@@ -9458,7 +9463,7 @@ msgstr "Wöchentlich"
 
 #
 msgid ""
-"Welcome to the cutlist editor.\n"
+"Welcome to the Cutlist editor.\n"
 "\n"
 "Seek to the start of the stuff you want to cut away. Press OK, select 'start cut'.\n"
 "\n"
@@ -10086,6 +10091,12 @@ msgstr "Schalte auf Live-TV um - Timeshift bleibt weiterhin aktiv !"
 
 msgid "First playable timeshift file!"
 msgstr "Sie befinden sich am Anfang der ersten abspielbaren Timeshift-Datei !"
+
+msgid "Show status messages when switch to live TV"
+msgstr "Zeige Statusmeldungen wenn zum Live-TV geschaltet wird"
+
+msgid "When enabled, show status or error messages."
+msgstr "Wenn 'Ja' ausgewählt wird, werden Status- oder Fehlermeldungen angezeigt."
 
 msgid ""
 "Can't going to live TV!\n"
