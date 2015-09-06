@@ -5958,7 +5958,7 @@ msgstr ""
 "für jeden Tuner einzeln starten."
 
 #
-msgid "Press OK to select a Provider."
+msgid "Press OK to select a provider."
 msgstr "OK drücken um einen Provider auszuwählen."
 
 #
@@ -8676,7 +8676,7 @@ msgid "Timer sanity error"
 msgstr "Timer-Einstellungen unklar"
 
 #
-msgid "Timer Selection"
+msgid "Timer selection"
 msgstr "Timer-Auswahl"
 
 #
@@ -10168,11 +10168,18 @@ msgid "activate network adapter configuration"
 msgstr "Einstellungen des Netzwerk-Adapters aktivieren"
 
 #
-msgid "add Provider"
+msgid "CIselectMainMenu"
+msgstr "CI-Hauptmenü"
+
+#
+msgid "CIconfigMenu"
+msgstr "CI-Zuweisung"
+#
+msgid "Add provider"
 msgstr "Provider hinzufügen"
 
 #
-msgid "add Service"
+msgid "Add service"
 msgstr "Kanal hinzufügen"
 
 #
@@ -10264,11 +10271,11 @@ msgid "as plugin in extended bar"
 msgstr "Als Plugin in Erweiterungsliste"
 
 #
-msgid "assigned CAIds:"
+msgid "Assigned CAIds:"
 msgstr "Zugewiesene CAIDs:"
 
 #
-msgid "assigned Services/Provider:"
+msgid "Assigned services/provider:"
 msgstr "Zugewiesene Services/Provider:"
 
 msgid "at beginning"
@@ -10846,7 +10853,7 @@ msgid "no CI slots found"
 msgstr "Kein CI-Slot gefunden"
 
 #
-msgid "no Services/Providers selected"
+msgid "No services/providers selected"
 msgstr "Keine Service/Provider ausgewählt"
 
 #
@@ -11148,7 +11155,7 @@ msgid "select"
 msgstr "Wähle"
 
 #
-msgid "select CAId"
+msgid "Select CAId"
 msgstr "CAID auswählen"
 
 #
@@ -13613,13 +13620,13 @@ msgstr "Papierkorb in der Filmliste benutzen"
 msgid "Display message before playing next movie"
 msgstr "Zeige Info bevor der nächste Film abgespielt wird."
 
-#
+#: gEPG
 msgid "Service font size"
-msgstr "Einstellung der Schriftgröße"
+msgstr "Schriftgröße für Sendernamen"
 
-#
+#: gEPG
 msgid "Event font size"
-msgstr "Ereignis Schriftgröße"
+msgstr "Schriftgröße für Ereignis"
 
 #
 msgid "When nonzero, a recording will start earlier than the starting time as indicated by the EPG."
@@ -16309,6 +16316,10 @@ msgstr "Was soll nach dem ausgeführten Timer gemacht werden? 'Automatisch' läs
 #: TimerEntry.py
 msgid "Where should the recording be saved?"
 msgstr "Wählen Sie das Zielverzeichnis für die Aufnahme aus."
+
+#: TimerEntry.py
+msgid "Current location"
+msgstr "Aktuelles Zielverzeichnis"
 
 #: TimerEntry.py
 msgid "Choose a tag for easy finding a recording."
