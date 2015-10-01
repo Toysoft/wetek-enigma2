@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: tuxbox-enigma 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-11-05 14:38+0000\n"
-"PO-Revision-Date: 2015-09-14 00:43+0100\n"
+"PO-Revision-Date: 2015-09-22 00:46+0100\n"
 "Last-Translator: mike99 <mike99@mail.to>\n"
 "Language-Team: openATV\n"
 "Language: de\n"
@@ -645,7 +645,7 @@ msgstr "Zur Zeit läuft eine Aufnahme. Bitte vor einem Scan-Versuch die Aufnahme
 
 #
 msgid "A recording is currently running. Please stop the recording before trying to start the satfinder."
-msgstr "Zur Zeit läuft eine Aufnahme. Bitte beenden Sie diese Aufnahme, bevor Sie den Sat-Finder starten."
+msgstr "Zur Zeit läuft eine Aufnahme. Bitte beenden Sie diese Aufnahme, bevor Sie den Signal-Finder starten."
 
 #
 #, python-format
@@ -2636,6 +2636,10 @@ msgstr "Spiegel"
 
 msgid "Disk space to reserve for recordings (in GB)"
 msgstr "Für Aufnahmen reservierter Speicher (in GB)"
+
+#: VideoMode.py:107
+msgid "Configure the aspect ratio of the screen."
+msgstr "Konfigurieren Sie das Seitenverhältnis des Bildschirms."
 
 #
 msgid "Display 16:9 content as"
@@ -5876,6 +5880,10 @@ msgstr "Schwellwert Stromverbrauch in mA"
 msgid "Predefined transponder"
 msgstr "Vordefinierte Transponder"
 
+# ScanSetup.py
+msgid "Invalid transponder data"
+msgstr "Ungültige Transponder-Daten"
+
 #
 msgid "User defined transponder"
 msgstr "Benutzerdefinierter Transponder"
@@ -6538,9 +6546,9 @@ msgstr "Satelliten-Ausrüstung"
 msgid "Satellites"
 msgstr "Satelliten"
 
-#
-msgid "Satfinder"
-msgstr "Sat-Finder"
+#: SystemPlugins/Satfinder/plugin.py
+msgid "Signal Finder"
+msgstr "Signal-Finder"
 
 #
 msgid "Sats"
@@ -10058,7 +10066,7 @@ msgstr ""
 msgid "Zap back to service before satfinder?"
 msgstr ""
 "Zurückschalten zum Sender der vor dem\n"
-"Öffnen des Satfinders lief?"
+"Öffnen des Signalfinders lief?"
 
 #
 msgid "Zap back to service before tuner setup?"
@@ -10254,6 +10262,14 @@ msgstr "Kanal zu Favoriten hinzufügen"
 #
 msgid "add to parental protection"
 msgstr "Zum Jugendschutz hinzufügen"
+
+#: ChannelSelection.py:250
+msgid "add bouquet to parental protection"
+msgstr "Bouquet zum Jugendschutz hinzufügen"
+
+#: ChannelSelection.py:252
+msgid "remove bouquet from parental protection"
+msgstr "Bouquet aus Jugendschutz entfernen"
 
 msgid "address:"
 msgstr "Adresse:"
@@ -11439,6 +11455,10 @@ msgstr "Diese Aufnahme"
 #
 msgid "this service is protected by a parental control pin"
 msgstr "Dieser Kanal ist durch einen Jugendschutz-PIN-Code geschützt."
+
+#
+msgid "this bouquet is protected by a parental control pin"
+msgstr "Dieser Bouquet ist durch einen Jugendschutz-PIN-Code geschützt."
 
 #
 msgid "Toggle a cut mark at the current position"
@@ -16125,7 +16145,7 @@ msgstr "Schützen durch EPG-Altersangaben"
 
 #: ParentalControlSetup.py:76
 msgid "Reload blacklists"
-msgstr "\"scharze\" Liste neu laden"
+msgstr "\"Schwarze\" Liste neu laden"
 
 #: ParentalControlSetup.py:78
 msgid "Protect Screens"
