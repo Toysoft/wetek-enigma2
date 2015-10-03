@@ -13,7 +13,7 @@ POLLTIME = 5 # seconds
 
 def SymbolsCheck(session, **kwargs):
 		global symbolspoller, POLLTIME
-		if getBoxType() in ('ixussone', 'ixusszero', 'mbmicro', 'e4hd', 'wetekplay'):
+		if getBoxType() in ('ixussone', 'ixusszero', 'mbmicro', 'e4hd', 'e4hdc', 'wetekplay'):
 			POLLTIME = 1
 		symbolspoller = SymbolsCheckPoller(session)
 		symbolspoller.start()
