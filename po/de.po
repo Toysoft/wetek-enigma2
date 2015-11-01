@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: tuxbox-enigma 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-11-05 14:38+0000\n"
-"PO-Revision-Date: 2015-10-03 00:24+0100\n"
+"PO-Revision-Date: 2015-10-26 20:55+0100\n"
 "Last-Translator: mike99 <mike99@mail.to>\n"
 "Language-Team: openATV\n"
 "Language: de\n"
@@ -10547,8 +10547,8 @@ msgstr "Deaktiviert"
 msgid "disconnected"
 msgstr "Getrennt"
 
-#
-msgid "do not change"
+#: UsageConfig.py:113
+msgid "Do not change"
 msgstr "Nicht ändern"
 
 #
@@ -12072,8 +12072,8 @@ msgstr "Zeige Eventview"
 msgid "Show CoolSingleGuide"
 msgstr "Zeige CoolSingleGuide"
 
-#
-msgid "Show epg"
+#: UsageConfig.py:799
+msgid "Show EPG"
 msgstr "Zeige EPG"
 
 #
@@ -12650,6 +12650,14 @@ msgstr "Beende Bild in Bild mit Exit"
 # /data/setup.xml
 msgid "When enabled the PiP can be closed by the exit button."
 msgstr "Wenn aktiviert, wird Bild in Bild beim Drücken der Exit-Taste beendet."
+
+# /data/setup.xml
+msgid "Remember last service in PiP"
+msgstr "Letzten Bild im Bild Service merken"
+
+# /data/setup.xml
+msgid "Configure if and how long the latest service in the PiP will be remembered."
+msgstr "Konfigurieren Sie, ob und wie lange der aktuelle Bild in Bild Service in Erinnerung bleiben soll."
 
 msgid "Show VCR scart on main menu"
 msgstr "Zeige Scart-Videorekorder im Hauptmenü"
@@ -13627,7 +13635,7 @@ msgstr "Einstellung, um die Kanalnamen, Picons oder beides im EPG anzuzeigen."
 
 #
 msgid "Configure the width allocated to the service name."
-msgstr "Legen Sie die Breite fest."
+msgstr "Legen Sie die Breite des Sendernamen fest."
 
 #
 msgid "Configure the amount of time that will be presented."
@@ -13651,7 +13659,7 @@ msgstr "Picon Breite"
 
 #
 msgid "Service width"
-msgstr "Breite"
+msgstr "Sendernamen Breite"
 
 #
 msgid "Timeline font size"
@@ -15003,32 +15011,52 @@ msgid "Please wait while your skin setting is restoring..."
 msgstr "Bitte warten, ihre Einstellungen werden wiederhergestellt"
 
 #: BackupRestore.py
-msgid "Error creating MetrixHD-Skin.\nPlease check after reboot MyMetrixLite-Plugin and apply your settings."
-msgstr "Fehler beim erstellen des MetrixHD-Skins.\nBitte überprüfen und übernehmen Sie die Einstellungen nach dem Restart in dem MyMetrixLite-Plugin."
+msgid ""
+"Error creating MetrixHD-Skin.\n"
+"Please check after reboot MyMetrixLite-Plugin and apply your settings."
+msgstr ""
+"Fehler beim erstellen des MetrixHD-Skins.\n"
+"Bitte überprüfen und übernehmen Sie ihre Einstellungen nach einem Neustart in dem MyMetrixLite-Plugin."
 
 #: BackupRestore.py
-msgid "Unknown Error creating Skin."
-msgstr "Unbekannter Fehler beim erstellen des Skins."
+msgid "Unknown Error creating Skin.\nPlease check after reboot MyMetrixLite-Plugin and apply your settings."
+msgstr "Unbekannter Fehler beim erstellen des Skins.\nBitte überprüfen und übernehmen Sie ihre Einstellungen nach einem Neustart in dem MyMetrixLite-Plugin."
 
 #: BackupRestore.py
 msgid "Error creating HD-Skin. Not enough flash memory free."
 msgstr "Fehler beim erstellen des HD-Skins. Nicht genügend Flash-Speicher frei."
 
 #: BackupRestore.py
-msgid "Error creating FullHD-Skin. Not enough flash memory free.\nUsing HD-Skin!"
-msgstr "Fehler beim erstellen des FullHD-Skins. Nicht genügend Flash-Speicher frei.\nEs wird der HD-Skin verwendet!"
+msgid ""
+"Error creating FullHD-Skin. Not enough flash memory free.\n"
+"Using HD-Skin!"
+msgstr ""
+"Fehler beim erstellen des FullHD-Skins. Nicht genügend Flash-Speicher frei.\n"
+"Es wird der HD-Skin verwendet!"
 
 #: BackupRestore.py
-msgid "Error creating FullHD-Skin. Icon package download not available.\nUsing HD-Skin!"
-msgstr "Fehler beim erstellen des FullHD-Skins. Der Download des Icon-Packets ist nicht verfügbar.\nEs wird der HD-Skin verwendet!"
+msgid ""
+"Error creating FullHD-Skin. Icon package download not available.\n"
+"Using HD-Skin!"
+msgstr ""
+"Fehler beim erstellen des FullHD-Skins. Der Download des Icon-Packets ist nicht verfügbar.\n"
+"Es wird der HD-Skin verwendet!"
 
 #: BackupRestore.py
-msgid "Error creating FullHD-Skin.\nUsing HD-Skin!"
-msgstr "Fehler beim erstellen des FullHD-Skins.\nEs wird der HD-Skin verwendet!"
+msgid ""
+"Error creating FullHD-Skin.\n"
+"Using HD-Skin!"
+msgstr ""
+"Fehler beim erstellen des FullHD-Skins.\n"
+"Es wird der HD-Skin verwendet!"
 
 #: BackupRestore.py
-msgid "Some FullHD-Icons are missing.\nUsing HD-Icons!"
-msgstr "Einige FullHD-Icons fehlen.\nEs wird die HD-Icons verwendet!"
+msgid ""
+"Some FullHD-Icons are missing.\n"
+"Using HD-Icons!"
+msgstr ""
+"Einige FullHD-Icons fehlen.\n"
+"Es werden die HD-Icons verwendet!"
 
 #: MovieSelection.py
 msgid "Do you really want to permamently remove '%s' from trash can ?"
@@ -16635,3 +16663,15 @@ msgstr "Springe zur Prime-Time"
 #: EpgSelection.py:311
 msgid "Move to home of list"
 msgstr "Springe zum Anfang der Liste"
+
+#: SystemPlugins/VideoClippingSetup/plugin.py:30
+msgid "Video clipping setup"
+msgstr "VideoClipping Einstellungen"
+
+#: SystemPlugins/VideoClippingSetup/plugin.py:128 plugin.py:135
+msgid "Video clipping"
+msgstr "Video Clipping"
+
+#: SystemPlugins/VideoClippingSetup/plugin.py:135
+msgid "clip overscan / letterbox borders"
+msgstr ""
