@@ -70,7 +70,7 @@ config.plugins.configurationbackup.backupdirs = ConfigLocations(default=[eEnv.re
 																		 '/etc/init.d/softcam*', '/etc/tuxbox/config/', '/etc/*.emu', '/etc/auto.network', '/etc/enigma2/automounts.xml',
 																		 '/etc/default/dropbear', '/home/root/.ssh/', '/etc/samba/', '/etc/fstab', '/etc/inadyn.conf', 
 																		 '/etc/network/interfaces', '/etc/wpa_supplicant.conf', '/etc/wpa_supplicant.ath0.conf', '/etc/opkg/secret-feed.conf',
-																		 '/etc/wpa_supplicant.wlan0.conf', '/etc/resolv.conf', '/etc/default_gw', '/etc/hostname',
+																		 '/etc/wpa_supplicant.wlan0.conf', '/etc/resolv.conf', '/etc/default_gw', '/etc/hostname', '/usr/lib/enigma2/python/Plugins/Extensions/VMC/DB/',
 																		 eEnv.resolve("${datadir}/enigma2/keymap.usr")])
 
 
@@ -1716,6 +1716,7 @@ class UpdatePlugin(Screen):
 			elif config.skin.primary_skin.value == "MetrixHD/skin.MySkin.xml" and config.plugins.MyMetrixLiteOther.FHDenabled.value:
 				from Plugins.Extensions.MyMetrixLite.MainSettingsView import MainSettingsView
 				MainSettingsView(None).getFHDiconRefresh()
+				self.restoreMetrixHDCallback()
 			else:
 				self.restoreMetrixHDCallback()
 		except:
