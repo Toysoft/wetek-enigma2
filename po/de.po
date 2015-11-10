@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: tuxbox-enigma 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-11-05 14:38+0000\n"
-"PO-Revision-Date: 2015-10-26 20:55+0100\n"
+"PO-Revision-Date: 2015-11-06 19:10+0100\n"
 "Last-Translator: mike99 <mike99@mail.to>\n"
 "Language-Team: openATV\n"
 "Language: de\n"
@@ -1230,6 +1230,9 @@ msgstr "Autostart aktiviert."
 
 msgid "Autostart:"
 msgstr "Autostart:"
+
+msgid "OscamInfo Mainmenu"
+msgstr "OscamInfo Hauptmenü"
 
 #
 msgid "Available format variables"
@@ -10114,6 +10117,38 @@ msgstr "Fokus umschalten zum Hauptbildschirm"
 msgid "Zap mode"
 msgstr "Umschaltmodus"
 
+#: data/setup.xml
+msgid "Channel zap delay mode"
+msgstr "Umschaltverzögerung"
+
+#: data/setup.xml
+msgid "Setup delay mode to zap to channels."
+msgstr "Hier können Sie den Verzögerungsmodus beim Umschalten einstellen."
+
+#: data/setup.xml
+msgid "Channel zap delay first button"
+msgstr "Umschaltverzögerung der ersten Ziffer"
+
+#: data/setup.xml
+msgid "User defined delay when you press the first button to zap to the channel."
+msgstr "Hier können Sie die Umschaltverzögerung der ersten Zifferntaste einstellen."
+
+#: data/setup.xml
+msgid "Channel zap delay another button"
+msgstr "Umschaltverzögerung weiterer Ziffern"
+
+#: data/setup.xml
+msgid "User defined delay when you press another button to zap to the channel."
+msgstr "Hier können Sie die Umschaltverzögerung der weiteren Zifferntasten einstellen."
+
+#: data/setup.xml
+msgid "Number of digits in channel number"
+msgstr "Anzahl der Stellen in der Kanalnummer "
+
+#: data/setup.xml
+msgid "This allows you to set the number of digits to 5, if you have more than 9999 channels."
+msgstr "Hier können Sie die Anzahl der Stellen auf 5 setzen, wenn Sie mehr als 9999 Kanäle haben."
+
 msgid "[TimeShift] - Merging records failed!"
 msgstr "TimeShift - Zusammenführen der Aufnahmen fehlgeschlagen!"
 
@@ -10690,6 +10725,14 @@ msgstr "In Deep-Standby herunterfahren"
 #
 msgid "go to standby"
 msgstr "In Standby gehen"
+
+#: PowerTimerEntry.py:118
+msgid "auto standby"
+msgstr "Automatisch in Standby gehen"
+
+#: PowerTimerEntry.py:118
+msgid "auto deepstandby"
+msgstr "Automatisch in Deep-Standby gehen"
 
 #
 msgid "grab this frame as bitmap"
@@ -11589,7 +11632,7 @@ msgid "wireless network interface"
 msgstr "WLAN Interface"
 
 msgid "with exit button"
-msgstr "Mit EXIT-Taster"
+msgstr "Mit EXIT-Taste"
 
 msgid "with left/right buttons"
 msgstr "Mit Links-/Rechts-Tasten"
@@ -11893,12 +11936,9 @@ msgstr ""
 "backupstick oder backupstick.txt vorhanden sein."
 
 msgid ""
-"No USB-Device found for fullbackup !!\n"
-"\n"
-"\n"
+"No USB-Device found for fullbackup !!\n\n\n"
 "To back-up directly to the USB-stick, the USB-stick MUST\n"
-"contain a file with the name: \n"
-"\n"
+"contain a file with the name: \n\n"
 "backupstick or backupstick.txt"
 msgstr ""
 "Kein USB-Stick für das Fullbackup gefunden!!\n"
@@ -12324,6 +12364,10 @@ msgstr "Ändern"
 msgid "add Current"
 msgstr "Hinzufügen"
 
+#: Volume_adjust/plugin.py:L58
+msgid "add Service"
+msgstr "Kanal hinzufügen"
+
 msgid "press the menu button to set a general AC3/Dolby offset"
 msgstr "Drücke die MENU Taste, um einen allgemeinen AC3/Dolby Offset zu setzen."
 
@@ -12433,14 +12477,37 @@ msgstr "Gelbe Taste"
 msgid "RedPanel"
 msgstr "Rote Taste"
 
+#:CronTimer.py : CronManager.py
 msgid "Run how often ?"
 msgstr "Wie oft ausführen?"
 
+#:CronTimer.py : CronManager.py
 msgid "Time to execute command or script"
 msgstr "Startzeit für Befehls- / Script-Ausführung"
 
+#:CronTimer.py : CronManager.py
 msgid "Command To Run"
-msgstr "Befehl zum ausführen"
+msgstr "Befehl zum Ausführen"
+
+#:CronTimer.py : CronManager.py
+msgid "What Day of week ?"
+msgstr "An welchem Wochentag?"
+
+#:CronTimer.py : CronManager.py
+msgid "What Day of month ?"
+msgstr "An welchem Tag des Monats?"
+
+#:CronTimer.py : CronManager.py
+msgid "Remove Confirmation"
+msgstr "Löschen bestätigen"
+
+#:CronTimer.py : CronManager.py
+msgid "Are you sure you want to delete this:\n "
+msgstr "Sicher das Sie löschen wollen:\n "
+
+#:CronTimer.py : CronManager.py
+msgid "You must set at least one Command"
+msgstr "Sie müssen mindestens einen Befehl setzen"
 
 msgid "Command type"
 msgstr "Befehlsart"
@@ -13961,7 +14028,7 @@ msgid "wakeup"
 msgstr "Aufwachen"
 
 msgid "restart GUI"
-msgstr "GUI Neustarten"
+msgstr "GUI neustarten"
 
 msgid "reboot system"
 msgstr "System neustarten"
@@ -15019,8 +15086,12 @@ msgstr ""
 "Bitte überprüfen und übernehmen Sie ihre Einstellungen nach einem Neustart in dem MyMetrixLite-Plugin."
 
 #: BackupRestore.py
-msgid "Unknown Error creating Skin.\nPlease check after reboot MyMetrixLite-Plugin and apply your settings."
-msgstr "Unbekannter Fehler beim erstellen des Skins.\nBitte überprüfen und übernehmen Sie ihre Einstellungen nach einem Neustart in dem MyMetrixLite-Plugin."
+msgid ""
+"Unknown Error creating Skin.\n"
+"Please check after reboot MyMetrixLite-Plugin and apply your settings."
+msgstr ""
+"Unbekannter Fehler beim erstellen des Skins.\n"
+"Bitte überprüfen und übernehmen Sie ihre Einstellungen nach einem Neustart in dem MyMetrixLite-Plugin."
 
 #: BackupRestore.py
 msgid "Error creating HD-Skin. Not enough flash memory free."
@@ -15749,6 +15820,30 @@ msgstr "Verzögerung:"
 # PowerTimerList.py
 msgid "Time range:"
 msgstr "Zeitbereich:"
+
+#: PowerTimerList.py:14
+msgid "Nothing"
+msgstr "Nichts"
+
+#: PowerTimerList.py:15
+msgid "Wake Up"
+msgstr "Aufwachen"
+
+#: PowerTimerList.py:16
+msgid "Wake Up To Standby"
+msgstr "In Standby aufwachen"
+
+#: PowerTimerList.py:18
+msgid "Auto Standby"
+msgstr "Automatisch in Standby"
+
+#: PowerTimerList.py:19
+msgid "Auto Deep Standby"
+msgstr "Automatisch in Deep-Standby"
+
+#: PowerTimerList.py:22
+msgid "Restart GUI"
+msgstr "GUI Neustart"
 
 msgid "Usage & GUI"
 msgstr "Bedienung & Oberfläche"
