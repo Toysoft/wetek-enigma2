@@ -174,6 +174,7 @@ AM_CONDITIONAL(VUSOLO, test "$BOXTYPE" == vusolo)
 AM_CONDITIONAL(VUSOLOSE, test "$BOXTYPE" == vusolose)
 AM_CONDITIONAL(VUDUO, test "$BOXTYPE" == vuduo)
 AM_CONDITIONAL(VUSOLO2, test "$BOXTYPE" == vusolo2)
+AM_CONDITIONAL(VUSOLO4K, test "$BOXTYPE" == vusolo4k)
 AM_CONDITIONAL(VUDUO2, test "$BOXTYPE" == vuduo2)
 AM_CONDITIONAL(VUZERO, test "$BOXTYPE" == vuzero)
 AM_CONDITIONAL(VENTONHDX, test "$BOXTYPE" == ventonhdx)
@@ -182,6 +183,8 @@ AM_CONDITIONAL(HAVE_WETEK_XBMC, test "$BOXTYPE" == wetekplay)
 AM_CONDITIONAL(HAVE_COLORLCD3, test "$BOXTYPE" == dm7080)
 AM_CONDITIONAL(HAVE_COLORLCD2, test "$BOXTYPE" == dm800se -o "$BOXTYPE" == dm800sev2 -o "$BOXTYPE" == dm820)
 AM_CONDITIONAL(HAVE_COLORLCD1, test "$BOXTYPE" == dm8000 -o "$BOXTYPE" == dm800 -o "$BOXTYPE" == dm7020hd -o "$BOXTYPE" == dm7020hdv2)
+AM_CONDITIONAL(HAVE_GRAUTEC8000, test "$BOXTYPE" == dm8000)
+AM_CONDITIONAL(HAVE_GRAUTEC70X0, test "$BOXTYPE" == dm7020hd -o "$BOXTYPE" == dm7020hdv2 -o "$BOXTYPE" == dm7080)
 
 AC_ARG_WITH(machinebuild,
 	[  --with-machinebuild=NAME machine build [[none,atemeo5200,atemeo6000...]]],
@@ -274,6 +277,17 @@ fi
 
 AM_CONDITIONAL(HAVE_COLORLCD400, test x"$withcolorlcd400" != xno)
 
+AC_ARG_WITH(colorlcd480,
+	AC_HELP_STRING([--with-colorlcd480], [use 480x320 16bpp color display, yes or no]),
+	[[withcolorlcd480=$withval]],
+	[[withcolorlcd480=no]]
+)
+if test x"$withcolorlcd480" != xno ; then
+	AC_DEFINE(HAVE_COLORLCD480, 1,[Define when using a 480x320 color display device])
+fi
+
+AM_CONDITIONAL(HAVE_COLORLCD480, test x"$withcolorlcd480" != xno)
+
 AC_ARG_WITH(colorlcd720,
 	AC_HELP_STRING([--with-colorlcd720], [use 720x576 16bpp color display, yes or no]),
 	[[withcolorlcd720=$withval]],
@@ -349,6 +363,10 @@ if test "$BOXTYPE" == "dm7080" -o "$BOXTYPE" == "dm820"; then
 	AC_DEFINE(TUNER_DM7080, 1,[define BOXTYPE DM7080])
 fi
 
+if test "$BOXTYPE" == "vusolo4k" ; then
+	AC_DEFINE(TUNER_VUSOLO4K, 1,[define BOXTYPE VUSOLO4K])
+fi
+
 ### for now leave enabled, probably alphablending should be disabled
 if test "$BOXTYPE" == "wetekplay"; then
 #	AC_DEFINE(FORCE_NO_BLENDING_ACCELERATION, 1,[define when the framebuffer acceleration does not have alphablending support, though the autodetection might indicate that it does])
@@ -419,7 +437,7 @@ if test "$BOXTYPE" == "xc7362"; then
 	AC_DEFINE(KEY_FAV_TO_KEY_PVR, 1,[define FAV KEY to PVR])
 fi
 
-if test "$BOXTYPE" == "hd2400" -o "$BOXTYPE" == "hd1100" -o "$BOXTYPE" == "hd1200" -o "$BOXTYPE" == "hd500c"; then
+if test "$BOXTYPE" == "hd2400" -o "$BOXTYPE" == "hd1100" -o "$BOXTYPE" == "hd1200" -o "$BOXTYPE" == "hd500c" -o "$BOXTYPE" == "hd1265"; then
 	AC_DEFINE(KEY_PLAY_ACTUALLY_IS_KEY_PLAYPAUSE, 1,[define when rc sends a KEY_PLAY event for its KEY_PLAYPAUSE key])
 	AC_DEFINE(KEY_F3_TO_KEY_LIST, 1,[define when rc sends a KEY_F3 event for its KEY_LIST key])
 fi
@@ -469,7 +487,7 @@ if test "$BOXTYPE" == "e3hd"; then
 	AC_DEFINE(KEY_DIRECTORY_TO_KEY_FILE, 1,[define when rc sends a KEY_DIRECTORY event for its KEY_FILE key])
 fi
 
-if test "$BOXTYPE" == "vuduo" -o "$BOXTYPE" == "vusolo" -o "$BOXTYPE" == "vuduo2" -o "$BOXTYPE" == "vusolo2" -o "$BOXTYPE" == "vuuno" -o "$BOXTYPE" == "vuultimo" -o "$BOXTYPE" == "vusolose" -o "$BOXTYPE" == "vuzero"; then
+if test "$BOXTYPE" == "vuduo" -o "$BOXTYPE" == "vusolo" -o "$BOXTYPE" == "vuduo2" -o "$BOXTYPE" == "vusolo2" -o "$BOXTYPE" == "vuuno" -o "$BOXTYPE" == "vuultimo" -o "$BOXTYPE" == "vusolose" -o "$BOXTYPE" == "vuzero" -o "$BOXTYPE" == "vusolo4k"; then
 	AC_DEFINE(FORCE_NO_BLENDING_ACCELERATION, 1,[define when the framebuffer acceleration does not have alphablending support, though the autodetection might indicate that it does])
 	AC_DEFINE(FORCE_ADVANCED_REMOTE, 1,[define to fixup the input device identification when the remote control is actually an 'advanced' remote (with play/forward/rewind keys)])
 	AC_DEFINE(KEY_HELP_TO_KEY_INFO, 1,[define when rc sends a KEY_HELP event we need KEY_INFO])
@@ -592,7 +610,12 @@ data/display128/Makefile
 data/display128dm/Makefile
 data/display220/Makefile
 data/display400/Makefile
+data/display480/Makefile
 data/display720/Makefile
+data/grautec70x0/Makefile
+data/grautec70x0/fonts/Makefile
+data/grautec8000/Makefile
+data/grautec8000/fonts/Makefile
 data/vfd128/Makefile
 data/vfd140/Makefile
 data/vfd255/Makefile
@@ -617,6 +640,7 @@ lib/python/Plugins/Extensions/MediaPlayer/Makefile
 lib/python/Plugins/Extensions/MediaPlayer/meta/Makefile
 lib/python/Plugins/Extensions/MediaScanner/Makefile
 lib/python/Plugins/Extensions/MediaScanner/meta/Makefile
+lib/python/Plugins/Extensions/MiniTV/Makefile
 lib/python/Plugins/Extensions/PicturePlayer/Makefile
 lib/python/Plugins/Extensions/PicturePlayer/meta/Makefile
 lib/python/Plugins/Extensions/SocketMMI/Makefile
@@ -630,6 +654,8 @@ lib/python/Plugins/Extensions/Infopanel/icons/Makefile
 lib/python/Plugins/Extensions/Volume_adjust/Makefile
 lib/python/Plugins/Extensions/Volume_adjust/nl/Makefile
 lib/python/Plugins/Extensions/StartKodi/Makefile
+lib/python/Plugins/SystemPlugins/Makefile
+lib/python/Plugins/SystemPlugins/AnimationSetup/Makefile
 lib/python/Plugins/SystemPlugins/CableScan/Makefile
 lib/python/Plugins/SystemPlugins/CommonInterfaceAssignment/Makefile
 lib/python/Plugins/SystemPlugins/CommonInterfaceAssignment/meta/Makefile
@@ -638,13 +664,13 @@ lib/python/Plugins/SystemPlugins/DefaultServicesScanner/meta/Makefile
 lib/python/Plugins/SystemPlugins/DiseqcTester/Makefile
 lib/python/Plugins/SystemPlugins/DiseqcTester/meta/Makefile
 lib/python/Plugins/SystemPlugins/FastScan/Makefile
+lib/python/Plugins/SystemPlugins/FastZapSupport/Makefile
 lib/python/Plugins/SystemPlugins/FrontprocessorUpgrade/Makefile
 lib/python/Plugins/SystemPlugins/FrontprocessorUpgrade/meta/Makefile
 lib/python/Plugins/SystemPlugins/HdmiCEC/Makefile
 lib/python/Plugins/SystemPlugins/Hotplug/Makefile
 lib/python/Plugins/SystemPlugins/Hotplug/meta/Makefile
 lib/python/Plugins/SystemPlugins/LCNScanner/Makefile
-lib/python/Plugins/SystemPlugins/Makefile
 lib/python/Plugins/SystemPlugins/NetworkWizard/Makefile
 lib/python/Plugins/SystemPlugins/NetworkWizard/meta/Makefile
 lib/python/Plugins/SystemPlugins/NFIFlash/Makefile
@@ -666,7 +692,6 @@ lib/python/Plugins/SystemPlugins/WirelessLan/Makefile
 lib/python/Plugins/SystemPlugins/WirelessLan/meta/Makefile
 lib/python/Plugins/SystemPlugins/SkinSelector/Makefile
 lib/python/Plugins/SystemPlugins/SkinSelector/meta/Makefile
-lib/python/Plugins/SystemPlugins/AnimationSetup/Makefile
 lib/python/Tools/Makefile
 po/Makefile
 main/Makefile
