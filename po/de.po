@@ -15818,30 +15818,6 @@ msgstr "Flashen: "
 msgid "Setup EPG"
 msgstr "EPG Einstellungen"
 
-# MetrixHDSTBInfo.py
-msgid "Flash Memory free: %s MByte"
-msgstr "Freier Flash Speicher: %s MByte"
-
-# MetrixHDSTBInfo.py
-msgid "CPU-Load: %s"
-msgstr "CPU-Last: %s"
-
-# MetrixHDSTBInfo.py
-msgid "CPU-Temp: %s"
-msgstr "CPU-Temp: %s"
-
-# MetrixHDSTBInfo.py
-msgid "CPU-Speed: %s MHz"
-msgstr "CPU-Speed: %s MHz"
-
-# MetrixHDSTBInfo.py
-msgid "SYS-Temp: %s"
-msgstr "SYS-Temp: %s"
-
-# MetrixHDSTBInfo.py
-msgid "RAM-Free: %s MB"
-msgstr "RAM-Frei: %s MB"
-
 # AudioSelection.py
 msgid "Switch between Audio-, Subtitlepage"
 msgstr "Umschalten zwischen Audio-, Untertitelauswahl, am Steuerkreuz"
@@ -16903,3 +16879,24 @@ msgstr "Deaktiviere FastZapping"
 
 msgid "Enable FastZapping"
 msgstr "Aktiviere FastZapping"
+
+msgid "Simple zoom"
+msgstr "Einfacher Zoom"
+
+msgid "Extrude from left"
+msgstr "Verformen nach links"
+
+msgid "Popup"
+msgstr "Aufblenden"
+
+msgid "Slide from left"
+msgstr "Von links Gleiten"
+
+msgid "Slide right to left"
+msgstr "Von rechts nach links"
+
+msgid "Zoom from left"
+msgstr "Zoom von links"
+
+msgid "Zoom from right"
+msgstr "Zoom von rechts"
