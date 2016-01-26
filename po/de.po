@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: tuxbox-enigma 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-11-05 14:38+0000\n"
-"PO-Revision-Date: 2016-01-10 13:36+0100\n"
+"PO-Revision-Date: 2016-01-25 22:12+0100\n"
 "Last-Translator: mike99 <mike99@mail.to>\n"
 "Language-Team: openATV\n"
 "Language: de\n"
@@ -1939,6 +1939,9 @@ msgstr "Standard"
 msgid "Reception Settings"
 msgstr "Empfangseinstellungen"
 
+msgid "Reception lists"
+msgstr "Empfangslisten"
+
 msgid "Configure interface"
 msgstr "Netzwerkkarte konfigurieren"
 
@@ -3339,6 +3342,9 @@ msgstr "Experimentell"
 #
 msgid "Expert"
 msgstr "Experte"
+
+msgid "Extended"
+msgstr "Erweitert"
 
 #
 msgid "Extended Networksetup Plugin..."
@@ -8133,6 +8139,14 @@ msgstr "Sind Sie sicher, dass alle Kabel-Dienste entfernt werden sollen?"
 #: ChannelSelection.py:1176
 msgid "Are you sure to remove all %d.%d%s%s services?"
 msgstr "Sind Sie sicher, dass %d.%d%s%s entfernt werden soll?"
+
+#
+msgid "Mark service as dedicated 3D service"
+msgstr "Als 3D Kanal markieren"
+
+#
+msgid "Unmark service as dedicated 3D service"
+msgstr "3D Markierung entfernen"
 
 #
 msgid "Test DiSEqC settings"
@@ -14702,12 +14716,11 @@ msgstr "Rechts vom Servicenamen"
 
 #
 msgid ""
-"PowerOff while Recording in progress!\n"
+"PowerOff while Recording in progress or next recording begins in next 15 minutes!\n"
 "Entering standby, after recording the box will shutdown."
 msgstr ""
-"Es läuft noch eine Aufnahme, Receiver wird bis zum Ende der\n"
-"\n"
-"Aufnahme in den Stby versetzt und danach heruntergefahren."
+"Es läuft noch eine Aufnahme oder eine Aufnahme beginnt in den nächsten 15 Minuten!\n"
+"Der Receiver wird jetzt in den Standby versetzt und am Ende der Aufnahme(n) heruntergefahren."
 
 # boot-up action
 msgid "Boot-up action"
@@ -16138,7 +16151,7 @@ msgstr ""
 
 #: ButtonSetup.py
 msgid "Hotkey Setup for"
-msgstr "Hotkey-Setup für"
+msgstr "Hotkey-Einstellung für"
 
 #: ButtonSetup.py
 msgid "are you sure to cancel all changes"
@@ -16986,3 +16999,14 @@ msgstr ""
 "Die Standardliste der zu sichernden Dateien kann nicht verändert werden.\n"
 "Bitte die 'Zusätze' und 'Ausschlüsse' verwenden."
 
+#: CutListEditor/plugin.py:87
+msgid "execute cuts (requires MovieCut plugin)"
+msgstr "Filmschnitt ausführen (benötigt MovieCut Plugin)"
+
+#: CutListEditor/plugin.py
+msgid "Enable intro screen"
+msgstr "Begrüßungsbildschirm aktivieren"
+
+#: CutListEditor/plugin.py
+msgid "Disable intro screen"
+msgstr "Begrüßungsbildschirm abschalten"
