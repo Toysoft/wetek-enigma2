@@ -2920,7 +2920,7 @@ msgstr ""
 msgid "Do you want to upgrade the package:\n"
 msgstr ""
 
-msgid "Dobly Digital downmix is now"
+msgid "Dolby Digital downmix is now"
 msgstr ""
 
 msgid "Dolby Digital / DTS downmix"
@@ -8064,7 +8064,7 @@ msgstr ""
 msgid "Sorry feeds are down for maintenance, please try again later."
 msgstr ""
 
-msgid "Sorry feeds are down for maintenance, please try again later. If this issue persists please check openvix.co.uk or world-of-satellite.com."
+msgid "Sorry feeds are down for maintenance, please try again later. If this issue persists please check www.opena.tv"
 msgstr ""
 
 msgid "Sorry no backups found!"
@@ -10531,7 +10531,7 @@ msgstr ""
 msgid "any recordings"
 msgstr ""
 
-msgid "are you sure to cancel all changes"
+msgid "Are you sure to cancel all changes"
 msgstr ""
 
 msgid ""
@@ -14215,4 +14215,21 @@ msgid "Your %s %s is shutting down. Please wait..."
 msgstr ""
 
 msgid "Your backup succeeded. We will now continue to explain the further upgrade process."
+msgstr ""
+
+#: MultiBootStartup.py:29
+msgid "MultiBoot Selector"
+msgstr ""
+
+#: MultiBootStartup.py:33
+msgid "Select Image: STARTUP_1"
+msgstr ""
+
+#: MultiBootStartup.py:55
+#, python-format
+msgid "Select Image: %s"
+msgstr ""
+
+#: TimerEntry.py
+msgid "After Recording"
 msgstr ""

@@ -96,6 +96,7 @@ AM_CONDITIONAL(DAGS5, test "$BOXTYPE" == dags5)
 AM_CONDITIONAL(DM8000, test "$BOXTYPE" == dm8000)
 AM_CONDITIONAL(DM7080, test "$BOXTYPE" == dm7080)
 AM_CONDITIONAL(DM820, test "$BOXTYPE" == dm820)
+AM_CONDITIONAL(DM520, test "$BOXTYPE" == dm520)
 AM_CONDITIONAL(DM7020HD, test "$BOXTYPE" == dm7020hd)
 AM_CONDITIONAL(DM7020HDV2, test "$BOXTYPE" == dm7020hdv2)
 AM_CONDITIONAL(DM800, test "$BOXTYPE" == dm800)
@@ -141,6 +142,7 @@ AM_CONDITIONAL(GBULTRAUE, test "$BOXTYPE" == gbultraue)
 AM_CONDITIONAL(GBQUADPLUS, test "$BOXTYPE" == gbquadplus)
 AM_CONDITIONAL(GBQUAD, test "$BOXTYPE" == gbquad)
 AM_CONDITIONAL(GBX1, test "$BOXTYPE" == gbx1)
+AM_CONDITIONAL(GBX2, test "$BOXTYPE" == gbx2)
 AM_CONDITIONAL(GBX3, test "$BOXTYPE" == gbx3)
 AM_CONDITIONAL(INIHDE, test "$BOXTYPE" == inihde)
 AM_CONDITIONAL(INIHDP, test "$BOXTYPE" == inihdp)
@@ -240,6 +242,16 @@ if test x"$withtextlcd" != xno ; then
 	AC_DEFINE(HAVE_TEXTLCD, 1,[Define when using an ascii based lcd device])
 fi
 AM_CONDITIONAL(HAVE_TEXTLCD, test x"$withtextlcd" != xno)
+
+AC_ARG_WITH(bwlcd96,
+	AC_HELP_STRING([--with-bwlcd96], [use 96x64 1bpp black and white display, yes or no]),
+	[[withbwlcd96=$withval]],
+	[[withbwlcd96=no]]
+)
+if test x"$withbwlcd96" != xno ; then
+	AC_DEFINE(HAVE_BWLCD96, 1,[Define when using a 96x64 black and white display device])
+fi
+AM_CONDITIONAL(HAVE_BWLCD96, test x"$withbwlcd96" != xno)
 
 AC_ARG_WITH(colorlcd,
 	AC_HELP_STRING([--with-colorlcd], [use 96x64 16bpp color display, yes or no]),
@@ -443,7 +455,7 @@ if test "$BOXTYPE" == "9900lx"; then
 	AC_DEFINE(FORCE_BLENDING_ACCELERATION, 1,[define when the framebuffer acceleration has alphablending support, but detection slow down all])
 fi
 
-if test "$BOXTYPE" == "g300"; then
+if test "$BOXTYPE" == "g300" -o "$BOXTYPE" == "g100"; then
 	AC_DEFINE(FORCE_BLENDING_ACCELERATION, 1,[define when the framebuffer acceleration has alphablending support, but detection slow down all])
 fi
 
@@ -451,12 +463,12 @@ if test "$BOXTYPE" == "xc7362"; then
 	AC_DEFINE(KEY_FAV_TO_KEY_PVR, 1,[define FAV KEY to PVR])
 fi
 
-if test "$BOXTYPE" == "hd2400" -o "$BOXTYPE" == "hd1100" -o "$BOXTYPE" == "hd1200" -o "$BOXTYPE" == "hd500c" -o "$BOXTYPE" == "hd1265" -o "$BOXTYPE" == "hd1500"; then
+if test "$BOXTYPE" == "hd2400" -o "$BOXTYPE" == "hd11" -o "$BOXTYPE" == "hd1100" -o "$BOXTYPE" == "hd1200" -o "$BOXTYPE" == "hd500c" -o "$BOXTYPE" == "hd1265" -o "$BOXTYPE" == "hd1500" -o "$BOXTYPE" == "hd51" -o "$BOXTYPE" == "hd52"; then
 	AC_DEFINE(KEY_PLAY_ACTUALLY_IS_KEY_PLAYPAUSE, 1,[define when rc sends a KEY_PLAY event for its KEY_PLAYPAUSE key])
 	AC_DEFINE(KEY_F3_TO_KEY_LIST, 1,[define when rc sends a KEY_F3 event for its KEY_LIST key])
 fi
 
-if test "$BOXTYPE" == "formuler1" -o "$BOXTYPE" == "formuler3" -o "$BOXTYPE" == "triplex" -o "$BOXTYPE" == "sf108"; then
+if test "$BOXTYPE" == "formuler1" -o "$BOXTYPE" == "formuler3" -o "$BOXTYPE" == "formuler4" -o "$BOXTYPE" == "triplex" -o "$BOXTYPE" == "sf108"; then
 	AC_DEFINE(KEY_F3_TO_KEY_LIST, 1,[define when rc sends a KEY_F3 event for its KEY_LIST key])
 	AC_DEFINE(KEY_LAST_TO_KEY_BACK, 1,[define when rc sends a KEY_LAST event for its KEY_BACK key])
 fi
@@ -474,7 +486,7 @@ if test "$BOXTYPE" == "sh1" -o "$BOXTYPE" == "lc"; then
 	AC_DEFINE(KEY_PLAY_ACTUALLY_IS_KEY_PLAYPAUSE, 1,[define when rc sends a KEY_PLAY event for its KEY_PLAYPAUSE key])
 fi
 
-if test "$BOXTYPE" == "7000s" -0 "$BOXTYPE" == "7100s" -0 "$BOXTYPE" == "7300s" -0 "$BOXTYPE" == "7400s"; then
+if test "$BOXTYPE" == "7000s" -0 "$BOXTYPE" == "7100s" -0 "$BOXTYPE" == "7105s" -0 "$BOXTYPE" == "7200s" -0 "$BOXTYPE" == "7205s" -0 "$BOXTYPE" == "7210s" -0 "$BOXTYPE" == "7215s" -0 "$BOXTYPE" == "7300s" -0 "$BOXTYPE" == "7400s"; then
 #	AC_DEFINE(FORCE_NO_BLENDING_ACCELERATION, 1,[define when the framebuffer acceleration does not have alphablending support, though the autodetection might indicate that it does])
 	AC_DEFINE(KEY_PLAY_ACTUALLY_IS_KEY_PLAYPAUSE, 1,[define when rc sends a KEY_PLAY event for its KEY_PLAYPAUSE key])
 fi
@@ -514,7 +526,7 @@ if test "$BOXTYPE" == "vp7358ci" ; then
 	AC_DEFINE(KEY_INFO_TO_KEY_EPG, 1,[define when rc sends a KEY_INFO event for its KEY_EPG key])
 fi
 
-if test "$BOXTYPE" == "gb800solo" -o "$BOXTYPE" == "gb800se" -o "$BOXTYPE" == "gb800ue" -o "$BOXTYPE" == "gbquad" -o "$BOXTYPE" == "gb800seplus" -o "$BOXTYPE" == "gb800ueplus" -o "$BOXTYPE" == "gbquadplus" -o "$BOXTYPE" == "gbipbox" -o "$BOXTYPE" == "gbultrase" -o "$BOXTYPE" == "gbultraue" -o "$BOXTYPE" == "gbx1" -o "$BOXTYPE" == "gbx3" -o "$BOXTYPE" == "gb7358" -o "$BOXTYPE" == "gb7325" -o "$BOXTYPE" == "gb7362" -o "$BOXTYPE" == "gb7356" -o "$BOXTYPE" == "gb7252"; then
+if test "$BOXTYPE" == "gb800solo" -o "$BOXTYPE" == "gb800se" -o "$BOXTYPE" == "gb800ue" -o "$BOXTYPE" == "gbquad" -o "$BOXTYPE" == "gb800seplus" -o "$BOXTYPE" == "gb800ueplus" -o "$BOXTYPE" == "gbquadplus" -o "$BOXTYPE" == "gbipbox" -o "$BOXTYPE" == "gbultrase" -o "$BOXTYPE" == "gbultraue" -o "$BOXTYPE" == "gbx1" -o "$BOXTYPE" == "gbx3" -o "$BOXTYPE" == "gb7358" -o "$BOXTYPE" == "gb7325" -o "$BOXTYPE" == "gb7362" -o "$BOXTYPE" == "gb73625" -o "$BOXTYPE" == "gb7356" -o "$BOXTYPE" == "gb7252"; then
 	AC_DEFINE(KEY_PLAY_ACTUALLY_IS_KEY_PLAYPAUSE, 1,[define when rc sends a KEY_PLAY event for its KEY_PLAYPAUSE key])
 	AC_DEFINE(KEY_GUIDE_TO_KEY_EPG, 1,[define when rc sends a KEY_HELP event for its KEY_EPG key])
 	AC_DEFINE(KEY_F2_TO_KEY_F6, 1,[define when rc sends a KEY_F2 event for its KEY_F6 key])

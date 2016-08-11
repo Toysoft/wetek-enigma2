@@ -1,6 +1,6 @@
 import os
 from time import time
-from enigma import eDVBDB, eEPGCache, setTunerTypePriorityOrder, setPreferredTuner, setSpinnerOnOff, setEnableTtCachingOnOff, eEnv, Misc_Options, eBackgroundFileEraser, eServiceEvent
+from enigma import eDVBDB, eEPGCache, setTunerTypePriorityOrder, setPreferredTuner, setSpinnerOnOff, setEnableTtCachingOnOff, eEnv, Misc_Options, eBackgroundFileEraser, eServiceEvent, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_VALIGN_CENTER, RT_WRAP
 
 from Components.About import about
 from Components.Harddisk import harddiskmanager
@@ -11,6 +11,7 @@ from Components.ServiceList import refreshServiceList
 from SystemInfo import SystemInfo
 from Tools.HardwareInfo import HardwareInfo
 from boxbranding import getBoxType
+from keyids import KEYIDS
 
 def InitUsageConfig():
 	config.misc.useNTPminutes = ConfigSelection(default = "30", choices = [("30", "30" + " " +_("minutes")), ("60", _("Hour")), ("1440", _("Once per day"))])
@@ -19,7 +20,8 @@ def InitUsageConfig():
 	config.workaround = ConfigSubsection()
 	config.workaround.blueswitch = ConfigSelection(default = "0", choices = [("0", _("QuickMenu/Extensions")), ("1", _("Extensions/QuickMenu"))])
 	config.workaround.deeprecord = ConfigYesNo(default = False)
-	config.workaround.wakeuptimeoffset = ConfigSelection(default = "standard", choices = [("-300", _("-5")), ("-240", _("-4")), ("-180", _("-3")), ("-120", _("-2")), ("-60", _("-1")), ("standard", _("Standard")), ("0", _("0")), ("60", _("1")), ("120", _("2")), ("180", _("3")), ("240", _("4")), ("300", _("5"))])
+	config.workaround.wakeuptime = ConfigSelectionNumber(default = 5, stepwidth = 1, min = 0, max = 30, wraparound = True)
+	config.workaround.wakeupwindow = ConfigSelectionNumber(default = 5, stepwidth = 5, min = 5, max = 60, wraparound = True)
 
 	config.usage = ConfigSubsection()
 	config.usage.shutdownOK = ConfigBoolean(default = True)
@@ -210,7 +212,7 @@ def InitUsageConfig():
 	config.usage.next_movie_msg = ConfigYesNo(default = True)
 	config.usage.last_movie_played = ConfigText()
 	config.usage.leave_movieplayer_onExit = ConfigSelection(default = "no", choices = [
-		("no", _("No")), ("popup", _("With popup")), ("without popup", _("Without popup")) ])
+		("no", _("No")), ("popup", _("With popup")), ("without popup", _("Without popup")), ("stop", _("Behave like stop-button")) ])
 
 	config.usage.setup_level = ConfigSelection(default = "expert", choices = [
 		("simple", _("Simple")),
@@ -229,6 +231,20 @@ def InitUsageConfig():
 	choicelist = [("show_menu", _("Show shutdown menu")), ("shutdown", _("Immediate shutdown")), ("standby", _("Standby")), ("sleeptimer", _("SleepTimer")), ("powertimerStandby", _("PowerTimer Standby")), ("powertimerDeepStandby", _("PowerTimer DeepStandby"))]
 	config.usage.on_long_powerpress = ConfigSelection(default = "show_menu", choices = choicelist)
 	config.usage.on_short_powerpress = ConfigSelection(default = "standby", choices = choicelist)
+
+	config.usage.long_press_emulation_key = ConfigSelection(default = "0", choices = [
+		("0", _("None")),
+		(str(KEYIDS["KEY_TV"]), _("TV")),
+		(str(KEYIDS["KEY_RADIO"]), _("Radio")),
+		(str(KEYIDS["KEY_AUDIO"]), _("Audio")),
+		(str(KEYIDS["KEY_VIDEO"]), _("List/Fav")),
+		(str(KEYIDS["KEY_HOME"]), _("Home")),
+		(str(KEYIDS["KEY_END"]), _("End")),
+		(str(KEYIDS["KEY_HELP"]), _("Help")),
+		(str(KEYIDS["KEY_INFO"]), _("Info (EPG)")),
+		(str(KEYIDS["KEY_TEXT"]), _("Teletext")),
+		(str(KEYIDS["KEY_SUBTITLE"]), _("Subtitle")),
+		(str(KEYIDS["KEY_FAVORITES"]), _("Favorites")) ])
 
 	choicelist = [("0", "Disabled")]
 	for i in (5, 30, 60, 300, 600, 900, 1200, 1800, 2700, 3600):
@@ -317,7 +333,7 @@ def InitUsageConfig():
 
 	config.usage.blinking_display_clock_during_recording = ConfigYesNo(default = False)
 	
-	if getBoxType() in ('et7000', 'et7500', 'et8000', 'triplex', 'formuler1', 'mutant1200', 'solo2', 'mutant1265', 'mutant1100', 'mutant500c', 'mutant1500'):
+	if getBoxType() in ('et7000', 'et7500', 'et8000', 'triplex', 'formuler1', 'mutant1200', 'solo2', 'mutant1265', 'mutant1100', 'mutant500c', 'mutant1500', 'osminiplus', 'ax51', 'mutant51'):
 		config.usage.blinking_rec_symbol_during_recording = ConfigSelection(default = "Channel", choices = [
 						("Rec", _("REC Symbol")), 
 						("RecBlink", _("Blinking REC Symbol")), 
@@ -492,7 +508,7 @@ def InitUsageConfig():
 	config.network = ConfigSubsection()
 	if SystemInfo["WakeOnLAN"]:
 		def wakeOnLANChanged(configElement):
-			if getBoxType() in ('et7000', 'et7500', 'gbx1', 'gbx3', 'et10000', 'gbquadplus', 'gbquad', 'gb800ueplus', 'gb800seplus', 'gbultraue', 'gbultrase', 'gbipbox', 'quadbox2400', 'mutant2400', 'et7x00', 'et8500', 'et8500s'):
+			if getBoxType() in ('et7000', 'et7100', 'et7500', 'gbx1', 'gbx3', 'et10000', 'gbquadplus', 'gbquad', 'gb800ueplus', 'gb800seplus', 'gbultraue', 'gbultrase', 'gbipbox', 'quadbox2400', 'mutant2400', 'et7x00', 'et8500', 'et8500s'):
 				open(SystemInfo["WakeOnLAN"], "w").write(configElement.value and "on" or "off")
 			else:
 				open(SystemInfo["WakeOnLAN"], "w").write(configElement.value and "enable" or "disable")
@@ -665,7 +681,7 @@ def InitUsageConfig():
 	config.subtitles.subtitle_fontsize  = ConfigSelection(choices = ["%d" % x for x in range(16,101) if not x % 2], default = "40")
 
 	subtitle_delay_choicelist = []
-	for i in range(-900000, 1845000, 45000):
+	for i in range(-54000000, 54045000, 45000):
 		if i == 0:
 			subtitle_delay_choicelist.append(("0", _("No delay")))
 		else:
@@ -674,7 +690,7 @@ def InitUsageConfig():
 
 	config.subtitles.dvb_subtitles_yellow = ConfigYesNo(default = False)
 	config.subtitles.dvb_subtitles_original_position = ConfigSelection(default = "0", choices = [("0", _("Original")), ("1", _("Fixed")), ("2", _("Relative"))])
-	config.subtitles.dvb_subtitles_centered = ConfigYesNo(default = True)
+	config.subtitles.dvb_subtitles_centered = ConfigYesNo(default = False)
 	config.subtitles.subtitle_bad_timing_delay = ConfigSelection(default = "0", choices = subtitle_delay_choicelist)
 	config.subtitles.dvb_subtitles_backtrans = ConfigSelection(default = "0", choices = [
 		("0", _("No transparency")),
@@ -871,6 +887,15 @@ def InitUsageConfig():
 	config.epgselection.graph_channel1 = ConfigYesNo(default = False)
 	config.epgselection.graph_servfs = ConfigSelectionNumber(default = 0, stepwidth = 1, min = -8, max = 10, wraparound = True)
 	config.epgselection.graph_eventfs = ConfigSelectionNumber(default = 0, stepwidth = 1, min = -8, max = 10, wraparound = True)
+	possibleAlignmentChoices = [
+		( str(RT_HALIGN_LEFT   | RT_VALIGN_CENTER          ) , _("left")),
+		( str(RT_HALIGN_CENTER | RT_VALIGN_CENTER          ) , _("centered")),
+		( str(RT_HALIGN_RIGHT  | RT_VALIGN_CENTER          ) , _("right")),
+		( str(RT_HALIGN_LEFT   | RT_VALIGN_CENTER | RT_WRAP) , _("left, wrapped")),
+		( str(RT_HALIGN_CENTER | RT_VALIGN_CENTER | RT_WRAP) , _("centered, wrapped")),
+		( str(RT_HALIGN_RIGHT | RT_VALIGN_CENTER | RT_WRAP) , _("right, wrapped"))]
+	config.epgselection.graph_event_alignment = ConfigSelection(default = possibleAlignmentChoices[0][0], choices = possibleAlignmentChoices)
+	config.epgselection.graph_servicename_alignment = ConfigSelection(default = possibleAlignmentChoices[0][0], choices = possibleAlignmentChoices)
 	config.epgselection.graph_timelinefs = ConfigSelectionNumber(default = 0, stepwidth = 1, min = -8, max = 10, wraparound = True)
 	config.epgselection.graph_timeline24h = ConfigYesNo(default = True)
 	config.epgselection.graph_itemsperpage = ConfigSelectionNumber(default = 8, stepwidth = 1, min = 3, max = 20, wraparound = True)
@@ -879,6 +904,51 @@ def InitUsageConfig():
 	config.epgselection.graph_servicewidth = ConfigSelectionNumber(default = 250, stepwidth = 1, min = 70, max = 500, wraparound = True)
 	config.epgselection.graph_piconwidth = ConfigSelectionNumber(default = 100, stepwidth = 1, min = 70, max = 500, wraparound = True)
 	config.epgselection.graph_infowidth = ConfigSelectionNumber(default = 25, stepwidth = 25, min = 0, max = 150, wraparound = True)
+	config.epgselection.graph_rec_icon_height = ConfigSelection(choices = [("bottom",_("bottom")),("top", _("top")), ("middle", _("middle")),  ("hide", _("hide"))], default = "bottom")
+
+	config.epgselection.graph_red = ConfigSelection(default='imdb', choices=[('autotimer', _('Auto Timer')),
+	 ('timer', _('Add/Remove Timer')),
+	 ('24plus', _('24+ Hours')),
+	 ('24minus', _('24- Hours')),
+	 ('imdb', _('IMDB search')),
+	 ('bouquetlist', _('Bouquet List')),
+	 ('showmovies', _('Show Movies List')),
+	 ('record', _('Record - same as record button')),
+	 ('gotodatetime', _('Goto Date/Timer')),
+	 ('epgsearch', _('EPG search'))])
+
+	config.epgselection.graph_green = ConfigSelection(default='timer', choices=[('autotimer', _('Auto Timer')),
+	 ('timer', _('Add/Remove Timer')),
+	 ('24plus', _('24+ Hours')),
+	 ('24minus', _('24- Hours')),
+	 ('imdb', _('IMDB search')),
+	 ('bouquetlist', _('Bouquet List')),
+	 ('showmovies', _('Show Movies List')),
+	 ('record', _('Record - same as record button')),
+	 ('gotodatetime', _('Goto Date/Timer')),
+	 ('epgsearch', _('EPG search'))])
+
+	config.epgselection.graph_yellow = ConfigSelection(default='epgsearch', choices=[('autotimer', _('Auto Timer')),
+	 ('timer', _('Add/Remove Timer')),
+	 ('24plus', _('24+ Hours')),
+	 ('24minus', _('24- Hours')),
+	 ('imdb', _('IMDB search')),
+	 ('bouquetlist', _('Bouquet List')),
+	 ('showmovies', _('Show Movies List')),
+	 ('record', _('Record - same as record button')),
+	 ('gotodatetime', _('Goto Date/Timer')),
+	 ('epgsearch', _('EPG search'))])
+
+	config.epgselection.graph_blue = ConfigSelection(default='autotimer', choices=[('autotimer', _('Auto Timer')),
+	 ('timer', _('Add/Remove Timer')),
+	 ('24plus', _('24+ Hours')),
+	 ('24minus', _('24- Hours')),
+	 ('imdb', _('IMDB search')),
+	 ('bouquetlist', _('Bouquet List')),
+	 ('showmovies', _('Show Movies List')),
+	 ('record', _('Record - same as record button')),
+	 ('gotodatetime', _('Goto Date/Timer')),
+	 ('epgsearch', _('EPG search'))])
 
 	config.oscaminfo = ConfigSubsection()
 	config.oscaminfo.showInExtensions = ConfigYesNo(default=False)

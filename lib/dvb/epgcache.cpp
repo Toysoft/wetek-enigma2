@@ -10,6 +10,10 @@
 
 #include <deque>
 #include <fstream>
+#include <ios>
+#include <sstream>
+#include <iomanip>
+#include <string>
 #include <time.h>
 #include <unistd.h>  // for usleep
 #include <sys/vfs.h> // for statfs
@@ -35,10 +39,10 @@
 struct DescriptorPair
 {
 	int reference_count;
-	__u8* data;
+	uint8_t* data;
 
 	DescriptorPair() {}
-	DescriptorPair(int c, __u8* d): reference_count(c), data(d) {}
+	DescriptorPair(int c, uint8_t* d): reference_count(c), data(d) {}
 };
 
 typedef std::tr1::unordered_map<uint32_t, DescriptorPair> DescriptorMap;
@@ -480,7 +484,7 @@ void eEPGCache::DVBChannelAdded(eDVBChannel *chan)
 		data->m_PrivatePid = -1;
 #endif
 #ifdef ENABLE_MHW_EPG
-		data->m_mhw2_channel_pid = 0x231; // defaults for astra 19.2 Canal+ Spain
+		data->m_mhw2_channel_pid = 0x231; // defaults for astra 19.2 Movistar+
 		if (maxdays < 4){
 			data->m_mhw2_title_pid = 0x234; // defaults for astra 19.2 Movistar+
 			data->m_mhw2_summary_pid = 0x236; // defaults for astra 19.2 Movistar+
@@ -670,7 +674,7 @@ bool eEPGCache::FixOverlapping(EventCacheItem &servicemap, time_t TM, int durati
 {
 	bool ret = false;
 	timeMap::iterator tmp = tm_it;
-	while ((tmp->first + tmp->second->getDuration() - 300) > TM)
+	while ((tmp->first + tmp->second->getDuration() - 360) > TM)
 	{
 		if(tmp->first != TM
 #ifdef ENABLE_PRIVATE_EPG
@@ -1389,7 +1393,7 @@ void eEPGCache::load()
 
 void eEPGCache::save()
 {
-	bool save_epg = eConfigManager::getConfigBoolValue("config.epg.saveepg");
+	bool save_epg = eConfigManager::getConfigBoolValue("config.epg.saveepg", true);
 	if (save_epg)
 	{
 		if (eventData::isCacheCorrupt)
@@ -1530,7 +1534,7 @@ void eEPGCache::channel_data::finishEPG()
 {
 	if (!isRunning)  // epg ready
 	{
-		eDebug("[EPGC] stop caching events(%ld)", ::time(0));
+		eDebug("[EPGC] stop caching events");
 		zapTimer->start(UPDATE_INTERVAL, 1);
 		eDebug("[EPGC] next update in %i min", UPDATE_INTERVAL / 60000);
 		for (unsigned int i=0; i < sizeof(seenSections)/sizeof(tidMap); ++i)
@@ -1551,7 +1555,7 @@ void eEPGCache::channel_data::finishEPG()
 
 void eEPGCache::channel_data::startEPG()
 {
-	eDebug("[EPGC] start caching events(%ld)", ::time(0));
+	eDebug("[EPGC] start caching events");
 	state=0;
 	haveData=0;
 	for (unsigned int i=0; i < sizeof(seenSections)/sizeof(tidMap); ++i)
@@ -1625,15 +1629,17 @@ void eEPGCache::channel_data::startEPG()
 	mask.flags = eDVBSectionFilterMask::rfCRC;
 
 	eDVBChannelID chid = channel->getChannelID();
-	char optsidonid[12];
-	sprintf (optsidonid,"%x", chid.dvbnamespace.get());
-	optsidonid [strlen(optsidonid) - 4] = '\0';
-	sprintf (optsidonid, "%s%04x%04x", optsidonid, chid.transport_stream_id.get(), chid.original_network_id.get());
-	std::map<std::string,int>::iterator it = cache->customeitpids.find(std::string(optsidonid));
+	std::ostringstream epg_id;
+	epg_id << std::hex << std::setfill('0') <<
+		std::setw(0) << ((chid.dvbnamespace.get() & 0xffff0000) >> 16) <<
+		std::setw(4) << chid.transport_stream_id.get() <<
+		std::setw(4) << chid.original_network_id.get();
+
+	std::map<std::string,int>::iterator it = cache->customeitpids.find(epg_id.str());
 	if (it != cache->customeitpids.end())
 	{
 		mask.pid = it->second;
-		eDebug("[eEPGCache] Using non standart pid %#x", mask.pid);
+		eDebug("[eEPGCache] Using non-standard pid %#x", mask.pid);
 	}
 
 	if (eEPGCache::getInstance()->getEpgSources() & eEPGCache::NOWNEXT)
@@ -2078,7 +2084,7 @@ void eEPGCache::channel_data::readData( const uint8_t *data, int source)
 #endif
 			default: eDebugNoNewLine("unknown");break;
 		}
-		eDebugNoNewLineEnd(" finished(%ld)", ::time(0));
+		eDebug(" finished(%ld)", ::time(0));
 		if ( reader )
 			reader->stop();
 		isRunning &= ~source;
@@ -3099,7 +3105,9 @@ void eEPGCache::importEvents(ePyObject serviceReferences, ePyObject list)
 		char event_type = (char) PyInt_AsLong(PyTuple_GET_ITEM(singleEvent, 5));
 
 		Py_BEGIN_ALLOW_THREADS;
-		submitEventData(refs, start, duration, title, short_summary, long_description, event_type);
+		{
+			submitEventData(refs, start, duration, title, short_summary, long_description, event_type);
+		}
 		Py_END_ALLOW_THREADS;
 	}
 }
@@ -4423,7 +4431,7 @@ void eEPGCache::channel_data::readMHWData(const uint8_t *data)
 		eDebug("[EPGC] mhw %d themes found", m_themes.size());
 		// Themes table has been read, start reading the titles table.
 		startMHWReader(0xD2, 0x90);
-		startMHWTimeout(4000);
+		startMHWTimeout(5000);
 		return;
 	}
 	else if (m_MHWFilterMask.pid == 0xD2 && m_MHWFilterMask.data[0] == 0x90)
@@ -4486,7 +4494,7 @@ void eEPGCache::channel_data::readMHWData(const uint8_t *data)
 			((summary->program_id_ml)<<8)|(summary->program_id_lo);
 		int len = ((data[1]&0xf)<<8) + data[2];
 
-		// ugly workaround to convert const __u8* to char*
+		// ugly workaround to convert const uint8_t* to char*
 		char *tmp=0;
 		memcpy(&tmp, &data, sizeof(void*));
 		tmp[len+3] = 0;	// Terminate as a string.
@@ -4533,10 +4541,7 @@ void eEPGCache::channel_data::readMHWData(const uint8_t *data)
 	if ( m_MHWReader )
 		m_MHWReader->stop();
 	if (haveData)
-	{
 		finishEPG();
-		cache->save();
-	}
 }
 
 void eEPGCache::channel_data::readMHWData2(const uint8_t *data)
@@ -4963,10 +4968,7 @@ abort:
 	if ( m_MHWReader2 )
 		m_MHWReader2->stop();
 	if (haveData)
-	{
 		finishEPG();
-		cache->save();
-	}
 }
 
 void eEPGCache::channel_data::readMHWData2_old(const uint8_t *data)
@@ -5537,7 +5539,7 @@ void eEPGCache::crossepgImportEPGv21(std::string dbroot)
 		for (int j=0; j<titles_count; j++)
 		{
 			epgdb_title_t title;
-			__u8 data[EIT_LENGTH];
+			uint8_t data[EIT_LENGTH];
 
 			fread(&title, sizeof(epgdb_title_t), 1, headers);
 
@@ -5569,7 +5571,7 @@ void eEPGCache::crossepgImportEPGv21(std::string dbroot)
 			data_eit_event->running_status = 0;
 			data_eit_event->free_CA_mode = 0;
 
-			__u8 *data_tmp = (__u8*)data_eit_event;
+			uint8_t *data_tmp = (uint8_t*)data_eit_event;
 			data_tmp += EIT_LOOP_SIZE;
 
 			if (title.description_length > 245)
@@ -5583,7 +5585,7 @@ void eEPGCache::crossepgImportEPGv21(std::string dbroot)
 			data_eit_short_event->language_code_2 = title.iso_639_2;
 			data_eit_short_event->language_code_3 = title.iso_639_3;
 			data_eit_short_event->event_name_length = title.description_length;// ? title.description_length + 1 : 0;
-			data_tmp = (__u8*)data_eit_short_event;
+			data_tmp = (uint8_t*)data_eit_short_event;
 			data_tmp += EIT_SHORT_EVENT_DESCRIPTOR_SIZE;
 			if (IS_UTF8(title.flags))
 			{
@@ -5606,7 +5608,7 @@ void eEPGCache::crossepgImportEPGv21(std::string dbroot)
 
 			fread(data_tmp, title.description_length, 1, descriptors);
 
-			int current_loop_length = data_tmp - (__u8*)data_eit_short_event;
+			int current_loop_length = data_tmp - (uint8_t*)data_eit_short_event;
 			static const int overhead_per_descriptor = 9;
 			static const int MAX_LEN = 256 - overhead_per_descriptor;
 
@@ -5656,7 +5658,7 @@ void eEPGCache::crossepgImportEPGv21(std::string dbroot)
 
 			delete ldescription;
 
-			int descriptors_length = data_tmp - ((__u8*)data_eit_event + EIT_LOOP_SIZE);
+			int descriptors_length = data_tmp - ((uint8_t*)data_eit_event + EIT_LOOP_SIZE);
 			data_eit_event->descriptors_loop_length_hi = descriptors_length >> 8;
 			data_eit_event->descriptors_loop_length_lo = descriptors_length & 0xff;
 

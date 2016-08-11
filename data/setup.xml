@@ -267,8 +267,9 @@
 		<item level="1" text="Scrolling delay (software renderer)" description="Set the delay time between repeated loops, this is used by software renderer in some skins.">config.lcd.scroll_delay</item>
 	</setup>
 	<setup key="specialfeatures" title="Special Features">
-		<item level="0" text="Use individual offset from waking up to starting a timer [min]" description="The standard wakeup time is 5 minutes (or box specific) before a timer starts. Is the real wake up time outside 10 mins (some boxes starts not punctually) to the next timer will not switched to standby. (minus value = wake up to timer is shorter)">config.workaround.wakeuptimeoffset</item>
-		<item level="0" text="Use work-around for recordings from deep-standby" description="Check with an alternative method (some boxes gives no signal when starts from a timer) if there is a timer started in the next 10 mins (at bootup), then will put your box in standby.">config.workaround.deeprecord</item>
+		<item level="0" text="Wakeup time before a timer begins [mins]" description="The default settings are 5 minutes earlier to wakeup from deep standby. It possibly may be necessary to change this. (e.g.: the actual wake-up time is inaccurate or to late, waiting to a network-drive, etc.)">config.workaround.wakeuptime</item>
+		<item level="0" text="Time window for detection of the wakeup by a timer [mins]" description="The default settings are wakeup time - 5 minutes and timer begin time + 5 minutes. This setting changed the time window before the wakeup time. So can be detected a wakeup by a timer even at very early starting receivers.">config.workaround.wakeupwindow</item>
+		<item level="0" text="Use workaround for wakeup from deep-standby?" description="If enabled, will checks for the time after the start of the receiver is within the time window and optionally switched to standby. If disabled, must additional be available a signal for the successful wakeup detection. (some receiver send a false or none signal)">config.workaround.deeprecord</item>
 		<item level="0" text="Use time jumps for fast forward/backward" description="This will go fast forward/backward with time frames of x secs">config.seek.withjumps</item>
 		<item level="0" text="Time jump: Use normal fast forward for speeds" description="Defines which fast forward speeds are using normal cueing. All other forward speeds and all rewind speeds use time jumps.">config.seek.withjumps_after_ff_speed</item>
 		<item level="0" text="Time jump multiplier for fast forward" description="Defines the jump distance for forward jumps. The value is multiplied by the wind speed, e.g. 4x. Values significantly lower than 4s may not work with all media files.">config.seek.withjumps_forwards_ms</item>
@@ -311,6 +312,7 @@
 		<item level="0" text="Select Yellow Key Action" description="Select what you want the YELLOW button to activate:">config.plugins.infopanel_yellowkey.list</item>
 		<item level="0" text="Select Yellow Key Action long" description="Select what you want the YELLOW-Long button to activate:">config.plugins.infopanel_yellowkey.listLong</item>
 		<item level="0" text="BlueSwitch: Blue-Short/Blue-Long" description="Switch Blue-Short (QuickMenu) with Blue-Long (Extensions)">config.workaround.blueswitch</item>
+		<item level="0" text="Long press emulation with button" description="Press this button to emulate a long press on a button pressed afterwards (this also overrides any other actions assigned to emulation button).">config.usage.long_press_emulation_key</item>
 		</setup>
 	<setup level="2" key="softcamsetup" title="Softcam settings">
 		<item level="2" text="Show CCcam in extensions ?" description="Allows you to show/hide CCcam in extensions (blue button).">config.cccaminfo.showInExtensions</item>
@@ -388,10 +390,13 @@
 		<item level="2" text="Primetime minute" description="Set to the desired primetime (minutes.">config.epgselection.infobar_primetimemins</item>
 		<item level="2" text="Number of rows" description="Configure the number of rows shown.">config.epgselection.infobar_itemsperpage</item>
 		<item level="2" text="Event font size" description="Configure the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size.">config.epgselection.infobar_eventfs</item>
+		<item level="2" text="Alignment of events" description="Configure the alignment of events.">config.epgselection.graph_event_alignment</item>
 		<item level="2" text="Service font size" description="Configure the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size.">config.epgselection.infobar_servfs</item>
+		<item level="2" text="Alignment of service names" description="Configure the alignment of service names.">config.epgselection.graph_servicename_alignment</item>
 		<item level="2" text="Service width" description="Configure the width allocated to the service name.">config.epgselection.infobar_servicewidth</item>
 		<item level="2" text="Picon width" description="Configure the width allocated to the picon.">config.epgselection.infobar_piconwidth</item>
 		<item level="2" text="Info icon width" description="Configure the minimum width before showing the 'i' icon, '0' is equal to not showing the icon at all.">config.epgselection.infobar_infowidth</item>
+		<item level="2" text="Position of recording icons" description="Set the position of the recording icons">config.epgselection.graph_rec_icon_height</item>
 		<item level="2" text="Timeline font size" description="Configure the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size.">config.epgselection.infobar_timelinefs</item>
 		<item level="2" text="Timeline 24 Hour" description="Show time in 24 hour clock format.">config.epgselection.infobar_timeline24h</item>
 		<item level="2" text="Time scale" description="Configure the amount of time that will be presented.">config.epgselection.infobar_prevtimeperiod</item>
@@ -406,6 +411,12 @@
 		<item level="2" text="Info button (long)" description="Set to what you want the button to do.">config.epgselection.graph_infolong</item>
 		<item level="2" text="OK button (short)" description="Set to what you want the button to do.">config.epgselection.graph_ok</item>
 		<item level="2" text="OK button (long)" description="Set to what you want the button to do.">config.epgselection.graph_oklong</item>
+
+		<item level="2" text="Red button" description="Set to what you want the button to do.">config.epgselection.graph_red</item>
+		<item level="2" text="Green button" description="Set to what you want the button to do.">config.epgselection.graph_green</item>
+		<item level="2" text="Yellow button" description="Set to what you want the button to do.">config.epgselection.graph_yellow</item>
+		<item level="2" text="Blue button" description="Set to what you want the button to do.">config.epgselection.graph_blue</item>
+
 		<item level="2" text="Channel 1 at start" description="If set to 'yes' the EPG will alway open at the first channel. If set to 'no' the EPG will open on the present channel.">config.epgselection.graph_channel1</item>
 		<item level="2" text="Skip empty services" description="If set to 'yes' channels without EPG will not be shown.">config.epgselection.overjump</item>
 		<item level="2" text="Base time" description="Choose time interval to which the graphics will be rounded off.">config.epgselection.graph_roundto</item>
@@ -413,10 +424,13 @@
 		<item level="2" text="Primetime minute" description="Set to the desired primetime (minutes.">config.epgselection.graph_primetimemins</item>
 		<item level="2" text="Number of rows" description="Configure the number of rows shown.">config.epgselection.graph_itemsperpage</item>
 		<item level="2" text="Event font size" description="Configure the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size.">config.epgselection.graph_eventfs</item>
+		<item level="2" text="Alignment of events" description="Configure the alignment of events.">config.epgselection.graph_event_alignment</item>
 		<item level="2" text="Service font size" description="Configure the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size.">config.epgselection.graph_servfs</item>
+		<item level="2" text="Alignment of service names" description="Configure the alignment of service names.">config.epgselection.graph_servicename_alignment</item>
 		<item level="2" text="Service width" description="Configure the width allocated to the service name.">config.epgselection.graph_servicewidth</item>
 		<item level="2" text="Picon width" description="Configure the width allocated to the picon.">config.epgselection.graph_piconwidth</item>
 		<item level="2" text="Info icon width" description="Configure the minimum width before showing the 'i' icon, '0' is equal to not showing the icon at all.">config.epgselection.graph_infowidth</item>
+		<item level="2" text="Position of recording icons" description="Set the position of the recording icons">config.epgselection.graph_rec_icon_height</item>
 		<item level="2" text="Timeline font size" description="Configure the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size.">config.epgselection.graph_timelinefs</item>
 		<item level="2" text="Timeline 24 Hour" description="Show time in 24 hour clock format.">config.epgselection.graph_timeline24h</item>
 		<item level="2" text="Time scale" description="Configure the amount of time that will be presented.">config.epgselection.graph_prevtimeperiod</item>

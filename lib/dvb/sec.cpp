@@ -34,7 +34,8 @@ void eDVBSatelliteEquipmentControl::setParam(int param, int value)
 }
 
 eDVBSatelliteEquipmentControl::eDVBSatelliteEquipmentControl(eSmartPtrList<eDVBRegisteredFrontend> &avail_frontends, eSmartPtrList<eDVBRegisteredFrontend> &avail_simulate_frontends)
-	:m_lnbidx((sizeof(m_lnbs) / sizeof(eDVBSatelliteLNBParameters))-1), m_curSat(m_lnbs[0].m_satellites.end()), m_avail_frontends(avail_frontends), m_avail_simulate_frontends(avail_simulate_frontends), m_rotorMoving(0)
+	:m_lnbidx((sizeof(m_lnbs) / sizeof(eDVBSatelliteLNBParameters))-1), m_curSat(m_lnbs[0].m_satellites.end()), m_avail_frontends(avail_frontends), m_avail_simulate_frontends(avail_simulate_frontends), m_rotorMoving(0),
+	m_not_linked_slot_mask(0), m_canMeasureInputPower(false)
 {
 	if (!instance)
 		instance = this;
@@ -306,16 +307,16 @@ int heterodyne(iDVBFrontend &frontend, int rf, int lof)
 	return ifreq;
 }
 
-RESULT eDVBSatelliteEquipmentControl::prepareRFmagicCSS(iDVBFrontend &frontend, eDVBSatelliteLNBParameters &lnb_param, long band, int ifreq, int &tunerfreq, unsigned int &tuningword, int guard_offest)
+RESULT eDVBSatelliteEquipmentControl::prepareRFmagicCSS(iDVBFrontend &frontend, eDVBSatelliteLNBParameters &lnb_param, long band, int ifreq, int &tunerfreq, unsigned int &tuningword, int guard_offset)
 {
 	bool simulate = ((eDVBFrontend*)&frontend)-> is_simulate();
-	int vco = roundMulti(lnb_param.SatCRvco + guard_offest + ifreq, 1000);
+	int vco = roundMulti(lnb_param.SatCRvco + guard_offset + ifreq, 1000);
 	tunerfreq = heterodyne(frontend, ifreq, vco);
 	unsigned int positions = lnb_param.SatCR_positions ? lnb_param.SatCR_positions : 1;
 	unsigned int posnum = (lnb_param.SatCR_positionnumber > 0)										// position == 0 -> use first position
 				&& (lnb_param.SatCR_positionnumber <= MAX_EN50607_POSITIONS) ?  lnb_param.SatCR_positionnumber - 1 : 0;
 
-	tuningword = (((roundMulti(vco - lnb_param.SatCRvco - 2*guard_offest - 100000, 1000)/1000)&0x07FF)<<8)
+	tuningword = (((roundMulti(vco - lnb_param.SatCRvco - 2*guard_offset - 100000, 1000)/1000)&0x07FF)<<8)
 			| (band & 0x3)						//Bit0:HighLow  Bit1:VertHor
 			| ((posnum & 0x3F) << 2)				//position number (0..63)
 			| ((lnb_param.SatCR_idx & 0x1F) << 19);			//addresse of SatCR (0..31)
@@ -325,10 +326,10 @@ RESULT eDVBSatelliteEquipmentControl::prepareRFmagicCSS(iDVBFrontend &frontend, 
 	return vco;
 }
 
-RESULT eDVBSatelliteEquipmentControl::prepareSTelectronicSatCR(iDVBFrontend &frontend, eDVBSatelliteLNBParameters &lnb_param, long band, int ifreq, int &tunerfreq, unsigned int &tuningword, int guard_offest)
+RESULT eDVBSatelliteEquipmentControl::prepareSTelectronicSatCR(iDVBFrontend &frontend, eDVBSatelliteLNBParameters &lnb_param, long band, int ifreq, int &tunerfreq, unsigned int &tuningword, int guard_offset)
 {
 	bool simulate = ((eDVBFrontend*)&frontend)->is_simulate();
-	int vco = roundMulti(lnb_param.SatCRvco + ifreq + guard_offest, 4000);
+	int vco = roundMulti(lnb_param.SatCRvco + ifreq + guard_offset, 4000);
 	tunerfreq = heterodyne(frontend, ifreq, vco);
 	unsigned int positions = lnb_param.SatCR_positions ? lnb_param.SatCR_positions : 1;
 	unsigned int posnum = (lnb_param.SatCR_positionnumber > 0)							// position == 0 -> use position A
@@ -1923,4 +1924,52 @@ void eDVBSatelliteEquipmentControl::setRotorMoving(int slot_no, bool b)
 		m_rotorMoving |= (1 << slot_no);
 	else
 		m_rotorMoving &= ~(1 << slot_no);
+}
+
+PyObject *eDVBSatelliteEquipmentControl::getBandCutOffFrequency(int slot_no, int orbital_position)
+{
+	PyObject *pyList = PyList_New(0);
+	for (int idx=0; idx <= m_lnbidx; ++idx)
+	{
+		eDVBSatelliteLNBParameters &lnb_param = m_lnbs[idx];
+		if ( lnb_param.m_slot_mask & (1 << slot_no)) // lnb for correct tuner?
+		{
+			std::map<int, eDVBSatelliteSwitchParameters>::iterator sit = lnb_param.m_satellites.find(orbital_position);
+			if ( sit != lnb_param.m_satellites.end())
+				PyList_Append(pyList, PyInt_FromLong(lnb_param.m_lof_threshold));
+		}
+	}
+	return pyList;
+}
+
+PyObject *eDVBSatelliteEquipmentControl::getFrequencyRangeList(int slot_no, int orbital_position)
+{
+	PyObject *pyList = PyList_New(0);
+	dvb_frontend_info fe_info;
+
+	eSmartPtrList<eDVBRegisteredFrontend>::iterator it(m_avail_frontends.begin());
+	for (; it != m_avail_frontends.end(); ++it)
+	{
+		if (it->m_frontend->getSlotID() == slot_no)
+		{
+			fe_info = ((eDVBFrontend*)it->m_frontend)->getFrontendInfo();
+		}
+	}
+
+	for (int idx=0; idx <= m_lnbidx; ++idx)
+	{
+		eDVBSatelliteLNBParameters &lnb_param = m_lnbs[idx];
+		if ( lnb_param.m_slot_mask & (1 << slot_no)) // lnb for correct tuner?
+		{
+			std::map<int, eDVBSatelliteSwitchParameters>::iterator sit = lnb_param.m_satellites.find(orbital_position);
+			if ( sit != lnb_param.m_satellites.end())
+			{
+				PyObject *pyTuple = PyTuple_New(2);
+				PyTuple_SET_ITEM(pyTuple, 0, PyInt_FromLong(lnb_param.m_lof_lo + fe_info.frequency_min));
+				PyTuple_SET_ITEM(pyTuple, 1, PyInt_FromLong(lnb_param.m_lof_hi + fe_info.frequency_max));
+				PyList_Append(pyList, pyTuple);
+			}
+		}
+	}
+	return pyList;
 }

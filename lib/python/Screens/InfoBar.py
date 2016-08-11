@@ -68,7 +68,8 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 				"openEPGSearch": (self.openEPGSearch, _("Open EPGSearch...")),
 				"openIMDB": (self.openIMDB, _("Open IMDB...")),
 				"showMC": (self.showMediaCenter, _("Show the media center...")),
-				"openSleepTimer": (self.openPowerTimerList, _("Show the Sleep Timer...")),
+				"openSleepTimer": (self.openSleepTimer, _("Show the Sleep Timer...")),
+				"openPowerTimerList": (self.openPowerTimerList, _("Show the Power Timer...")),
 				'ZoomInOut': (self.ZoomInOut, _('Zoom In/Out TV...')),
 				'ZoomOff': (self.ZoomOff, _('Zoom Off...')),
 				'HarddiskSetup': (self.HarddiskSetup, _('Select HDD')),	
@@ -585,6 +586,8 @@ class MoviePlayer(InfoBarAspectSelection, InfoBarSimpleEventView, InfoBarBase, I
 			self.session.openWithCallback(self.leavePlayerOnExitCallback, MessageBox, _("Exit movie player?"), simple=True)
 		elif config.usage.leave_movieplayer_onExit.value == "without popup":
 			self.leavePlayerOnExitCallback(True)
+		elif config.usage.leave_movieplayer_onExit.value == "stop":
+			self.leavePlayer()
 
 	def leavePlayerOnExitCallback(self, answer):
 		if answer:

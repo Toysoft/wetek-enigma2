@@ -592,23 +592,29 @@ class SecConfigure:
 			tmp.loft = ConfigSubDict()
 			tmp.diction = ConfigSubDict()
 			tmp.product = ConfigSelection(choices = [], default = None)
+			tmp.positions = ConfigSubDict()
+			tmp.positionsoffset = ConfigSubDict()
 
 		if PN not in tmp.product.choices.choices:
 			print "[reconstructUnicableDate] Product %s not in unicable.xml" % PN
 			scrlist = []
-			SatCR = int(PDict.get('scr', {PN,1}).get(PN,1)) - 1
-			vco = int(PDict.get('vco', {PN,0}).get(PN,0).get(str(SatCR),1))
+			SatCR = int(PDict.get('scr', {PN:1}).get(PN,1)) - 1
+			vco = int(PDict.get('vco', {PN:0}).get(PN,0).get(str(SatCR),1))
 
 			positionslist=[1,(9750, 10600, 11700)]	##adenin_todo
 			positions = int(positionslist[0])
-			tmp.positions = ConfigSubDict()
 			tmp.positions[PN] = ConfigSubList()
 			tmp.positions[PN].append(ConfigInteger(default=positions, limits = (positions, positions)))
+
+			positionsoffsetlist=[0,]	##adenin_todo
+			positionsoffset = int(positionsoffsetlist[0])
+			tmp.positionsoffset[PN] = ConfigSubList()
+			tmp.positionsoffset[PN].append(ConfigInteger(default=positionsoffset, limits = (positionsoffset, positionsoffset)))
 
 			tmp.vco[PN] = ConfigSubList()
 
 			for cnt in range(0,SatCR + 1):
-				vcofreq = (cnt == SatCR) and vco or 0		# equivalent to vcofreq = (cnt == SatCR) ? 1432 : 0
+				vcofreq = (cnt == SatCR) and vco or 0		# equivalent to vcofreq = (cnt == SatCR) ? vco : 0
 				if vcofreq == 0 :
 					scrlist.append(("%d" %(cnt+1),"SCR %d " %(cnt+1) +_("not used")))
 				else:
@@ -813,7 +819,7 @@ class NIM(object):
 	friendly_full_description = property(getFriendlyFullDescription)
 	config_mode = property(lambda self: config.Nims[self.slot].configMode.value)
 	config = property(lambda self: config.Nims[self.slot])
-	empty = property(lambda self: self.getType is None)
+	empty = property(lambda self: self.getType() is None)
 
 class NimManager:
 	def getConfiguredSats(self):
@@ -1447,10 +1453,7 @@ def InitSecParams():
 
 jess_alias = ("JESS","UNICABLE2","SCD2","EN50607","EN 50607")
 
-lscr = ("scr1","scr2","scr3","scr4","scr5","scr6","scr7","scr8","scr9","scr10",
-		"scr11","scr12","scr13","scr14","scr15","scr16","scr17","scr18","scr19","scr20",
-		"scr21","scr22","scr23","scr24","scr25","scr26","scr27","scr28","scr29","scr30",
-		"scr31","scr32")
+lscr = [("scr%d" % i) for i in range(1,33)]
 
 def InitNimManager(nimmgr, update_slots = []):
 	hw = HardwareInfo()
@@ -1730,42 +1733,15 @@ def InitNimManager(nimmgr, update_slots = []):
 			section.satcruserEN50494 = ConfigSelection(advanced_lnb_satcr_user_choicesEN50494, default="1")
 			section.satcruserEN50607 = ConfigSelection(advanced_lnb_satcr_user_choicesEN50607, default="1")
 
-			tmp = ConfigSubList()
-			tmp.append(ConfigInteger(default=1284, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1400, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1516, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1632, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1748, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1864, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1980, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=2096, limits = (950, 2150)))
-			section.satcrvcouserEN50494 = tmp 
+			tmpEN50494 = ConfigSubList()
+			for i in (1284, 1400, 1516, 1632, 1748, 1864, 1980, 2096):
+				tmpEN50494.append(ConfigInteger(default=i, limits = (950, 2150)))
+			section.satcrvcouserEN50494 = tmpEN50494
 
-			tmp.append(ConfigInteger(default=1284, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1400, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1516, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1632, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1748, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1864, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1980, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=2096, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1284, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1400, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1516, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1632, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1748, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1864, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1980, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=2096, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1284, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1400, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1516, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1632, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1748, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1864, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=1980, limits = (950, 2150)))
-			tmp.append(ConfigInteger(default=2096, limits = (950, 2150)))
-			section.satcrvcouserEN50607 = tmp 
+			tmpEN50607 = ConfigSubList()
+			for i in (1210, 1420, 1680, 2040, 984, 1020, 1056, 1092, 1128, 1164, 1256, 1292, 1328, 1364, 1458, 1494, 1530, 1566, 1602, 1638, 1716, 1752, 1788, 1824, 1860, 1896, 1932, 1968, 2004, 2076, 2112, 2148):
+				tmpEN50607.append(ConfigInteger(default=i, limits = (950, 2150)))
+			section.satcrvcouserEN50607 = tmpEN50607
 
 			nim.advanced.unicableconnected = ConfigYesNo(default=False)
 			nim.advanced.unicableconnectedTo = ConfigSelection([(str(id), nimmgr.getNimDescription(id)) for id in nimmgr.getNimListOfType("DVB-S") if id != x])

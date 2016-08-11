@@ -2381,13 +2381,15 @@ class InfoBarSeek:
 			self.seekAction = 0
 
 		if os.path.exists("/proc/stb/lcd/symbol_hdd"):
-			file = open("/proc/stb/lcd/symbol_hdd", "w")
-			file.write('%d' % int(hdd))
-			file.close()
+			if config.lcd.hdd.value == "1":
+				file = open("/proc/stb/lcd/symbol_hdd", "w")
+				file.write('%d' % int(hdd))
+				file.close()
 		if os.path.exists("/proc/stb/lcd/symbol_hddprogress"):
-			file = open("/proc/stb/lcd/symbol_hddprogress", "w")
-			file.write('%d' % int(self.activity))
-			file.close()
+			if config.lcd.hdd.value == "1":
+				file = open("/proc/stb/lcd/symbol_hddprogress", "w")
+				file.write('%d' % int(self.activity))
+				file.close()
 		if self.LastseekAction:
 			self.DoSeekAction()
 
@@ -3818,16 +3820,16 @@ class InfoBarInstantRecord:
 				if self.recording[self.selectedEntry].end != ret[1]:
 					self.recording[self.selectedEntry].autoincrease = False
 				self.recording[self.selectedEntry].end = ret[1]
-		else:
-			if self.recording[self.selectedEntry].end != int(time()):
-				self.recording[self.selectedEntry].autoincrease = False
-			self.recording[self.selectedEntry].end = int(time())
-		self.session.nav.RecordTimer.timeChanged(self.recording[self.selectedEntry])
+		#else:
+		#	if self.recording[self.selectedEntry].end != int(time()):
+		#		self.recording[self.selectedEntry].autoincrease = False
+		#	self.recording[self.selectedEntry].end = int(time())
+				self.session.nav.RecordTimer.timeChanged(self.recording[self.selectedEntry])
 
 	def changeDuration(self, entry):
 		if entry is not None and entry >= 0:
 			self.selectedEntry = entry
-			self.session.openWithCallback(self.inputCallback, InputBox, title=_("How many minutes do you want to record?"), text="5", maxSize=False, type=Input.NUMBER)
+			self.session.openWithCallback(self.inputCallback, InputBox, title=_("How many minutes do you want to record?"), text="5  ", maxSize=True, type=Input.NUMBER)
 
 	def inputCallback(self, value):
 #		print "stopping recording after", int(value), "minutes."
@@ -3836,11 +3838,11 @@ class InfoBarInstantRecord:
 			if int(value) != 0:
 				entry.autoincrease = False
 			entry.end = int(time()) + 60 * int(value)
-		else:
-			if entry.end != int(time()):
-				entry.autoincrease = False
-			entry.end = int(time())
-		self.session.nav.RecordTimer.timeChanged(entry)
+		#else:
+		#	if entry.end != int(time()):
+		#		entry.autoincrease = False
+		#	entry.end = int(time())
+			self.session.nav.RecordTimer.timeChanged(entry)
 
 	def isTimerRecordRunning(self):
 		identical = timers = 0
@@ -3904,11 +3906,11 @@ class InfoBarAudioSelection:
 		self["AudioSelectionAction"] = HelpableActionMap(self, "InfobarAudioSelectionActions",
 			{
 				"audioSelection": (self.audioSelection, _("Audio options...")),
-				"audio_key": (self.audio_key, _("Audio options...")),
-				"audioSelectionLong": (self.audioSelectionLong, _("Toggle Digital downmix...")),
+				"yellow_key": (self.yellow_key, _("Audio options...")),
+				"audioSelectionLong": (self.audioDownmixToggle, _("Toggle Digital downmix...")),
 			})
 
-	def audioSelection(self):
+	def yellow_key(self):
 		if not hasattr(self, "LongButtonPressed"):
 			self.LongButtonPressed = False
 		if not self.LongButtonPressed:
@@ -3942,24 +3944,33 @@ class InfoBarAudioSelection:
 				except:
 					pass
 				
-	def audio_key(self):
+	def audioSelection(self):
 		from Screens.AudioSelection import AudioSelection
 		self.session.openWithCallback(self.audioSelected, AudioSelection, infobar=self)
 
 	def audioSelected(self, ret=None):
 		print "[infobar::audioSelected]", ret
 
-	def audioSelectionLong(self):
-		if SystemInfo["CanDownmixAC3"] and self.LongButtonPressed:
+	def audioDownmixToggle(self, popup = True):
+		if SystemInfo["CanDownmixAC3"]:
 			if config.av.downmix_ac3.value:
-				message = _("Dobly Digital downmix is now") + " " + _("disabled")
-				print '[Audio] Dobly Digital downmix is now disabled'
+				message = _("Dolby Digital downmix is now") + " " + _("disabled")
+				print '[Audio] Dolby Digital downmix is now disabled'
 				config.av.downmix_ac3.setValue(False)
 			else:
 				config.av.downmix_ac3.setValue(True)
-				message = _("Dobly Digital downmix is now") + " " + _("enabled")
-				print '[Audio] Dobly Digital downmix is now enabled'
-			Notifications.AddPopup(text = message, type = MessageBox.TYPE_INFO, timeout = 5, id = "DDdownmixToggle")
+				message = _("Dolby Digital downmix is now") + " " + _("enabled")
+				print '[Audio] Dolby Digital downmix is now enabled'
+			if popup:
+				Notifications.AddPopup(text = message, type = MessageBox.TYPE_INFO, timeout = 5, id = "DDdownmixToggle")
+
+	def audioDownmixOn(self):
+		if not config.av.downmix_ac3.value:
+			self.audioDownmixToggle(False)
+
+	def audioDownmixOff(self):
+		if config.av.downmix_ac3.value:
+			self.audioDownmixToggle(False)
 
 class InfoBarSubserviceSelection:
 	def __init__(self):
@@ -4157,7 +4168,7 @@ class InfoBarTimerButton:
 class InfoBarAspectSelection: 
 	STATE_HIDDEN = 0 
 	STATE_ASPECT = 1 
-	STATE_RESOLUTION = 2 
+	STATE_RESOLUTION = 2
 	def __init__(self): 
 		self["AspectSelectionAction"] = HelpableActionMap(self, "InfobarAspectSelectionActions", 
 			{ 
@@ -4194,28 +4205,10 @@ class InfoBarAspectSelection:
 
 	def aspectSelection(self):
 		selection = 0
-		tlist = []
-		tlist.append((_("Resolution"), "resolution"))
-		tlist.append(("--", ""))
-		try:
-			policy = open("/proc/stb/video/policy_choices").read()[:-1].rstrip()
-		except IOError:
-			print "couldn't read available policymodes."
-			policy_available = [ ]
-			return
-		policy_available = policy.split(' ')
-		for x in policy_available:
-			tlist.append((x[0].upper() + x[1:], _(x)))
-
-		mode = open("/proc/stb/video/policy").read()[:-1]
-		print mode
+		tlist= [(_("Resolution"), "resolution"),("--", ""),(_("4_3_letterbox"), "0"), (_("4_3_panscan"), "1"), (_("16_9"), "2"), (_("16_9_always"), "3"), (_("16_10_letterbox"), "4"), (_("16_10_panscan"), "5"), (_("16_9_letterbox"), "6")]
 		for x in range(len(tlist)):
-			if tlist[x][1] == mode:
-				selection = x
-
+			selection = x
 		keys = ["green", "",  "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
-
-
 		self.session.openWithCallback(self.aspectSelected, ChoiceBox, title=_("Please select an aspect ratio..."), list = tlist, selection = selection, keys = keys)
 
 	def aspectSelected(self, aspect):
@@ -4226,18 +4219,9 @@ class InfoBarAspectSelection:
 				elif aspect[1] == "resolution":
 					self.ExGreen_toggleGreen()
 				else:
-					if aspect[1] == "letterbox":
-						f = open("/proc/stb/video/policy", "w")
-						f.write("panscan")
-						f.close()
-					elif aspect[1] == "panscan":
-						f = open("/proc/stb/video/policy", "w")
-						f.write("letterbox")
-						f.close()
-					else:
-						f = open("/proc/stb/video/policy", "w")
-						f.write(aspect[1])
-						f.close()
+					from Components.AVSwitch import AVSwitch
+					iAVSwitch = AVSwitch()
+					iAVSwitch.setAspectRatio(int(aspect[1]))
 					self.ExGreen_doHide()
 		else:
 			self.ExGreen_doHide()
@@ -4774,6 +4758,16 @@ class InfoBarSubtitleSupport(object):
 		else:
 			return 0
 
+	def subtitleQuickMenu(self):
+		service = self.session.nav.getCurrentService()
+		subtitle = service and service.subtitle()
+		subtitlelist = subtitle and subtitle.getSubtitleList()
+		if self.selected_subtitle and self.selected_subtitle != (0,0,0,0):
+			from Screens.AudioSelection import QuickSubtitlesConfigMenu
+			self.session.open(QuickSubtitlesConfigMenu, self)
+		else:
+			self.subtitleSelection()
+
 	def __serviceChanged(self):
 		if self.selected_subtitle:
 			self.selected_subtitle = None
@@ -4911,10 +4905,12 @@ class InfoBarHdmi:
 				self.session.pip.playService(eServiceReference('8192:0:1:0:0:0:0:0:0:0:'))
 				self.session.pip.show()
 				self.session.pipshown = True
+				self.session.pip.servicePath = self.servicelist.getCurrentServicePath()
 			else:
 				curref = self.session.pip.getCurrentService()
 				if curref and curref.type != 8192:
 					self.session.pip.playService(eServiceReference('8192:0:1:0:0:0:0:0:0:0:'))
+					self.session.pip.servicePath = self.servicelist.getCurrentServicePath()
 				else:
 					self.session.pipshown = False
 					del self.session.pip
