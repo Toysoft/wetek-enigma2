@@ -168,8 +168,8 @@ eDVBResourceManager::eDVBResourceManager()
 		m_boxtype = DM800SE;
 	else if (!strncmp(tmp, "wetekplay\n", rd))
 		m_boxtype = WETEKPLAY;
-	else if (!strncmp(tmp, "wetekplayplus\n", rd))
-		m_boxtype = WETEKPLAYPLUS;
+	else if (!strncmp(tmp, "wetekplay2\n", rd))
+		m_boxtype = WETEKPLAY2;
 	else {
 		eDebug("boxtype detection via /proc/stb/info not possible... use fallback via demux count!\n");
 		if (m_demux.size() == 3)
@@ -1060,7 +1060,7 @@ RESULT eDVBResourceManager::allocateDemux(eDVBRegisteredFrontend *fe, ePtr<eDVBA
 			}
 		}
 	}
-	else if (m_boxtype == WETEKPLAY)
+	else if (m_boxtype == WETEKPLAY || m_boxtype == WETEKPLAY2)
 	{	
 		int n=0;
 		iDVBAdapter *adapter = fe ? fe->m_adapter : m_adapter.begin(); /* look for a demux on the same adapter as the frontend, or the first adapter for dvr playback */
@@ -1235,7 +1235,7 @@ RESULT eDVBResourceManager::allocateChannel(const eDVBChannelID &channelid, eUse
 	if (!simulate && m_cached_channel)
 	{
 		eDVBChannel *cache_chan = (eDVBChannel*)&(*m_cached_channel);
-		if((m_boxtype != WETEKPLAY) && (channelid==cache_chan->getChannelID()))
+		if((m_boxtype != WETEKPLAY && m_boxtype != WETEKPLAY2) && (channelid==cache_chan->getChannelID()))
 		{
 			eDebug("use cached_channel");
 			channel = m_cached_channel;
