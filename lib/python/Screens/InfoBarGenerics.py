@@ -2015,10 +2015,10 @@ class InfoBarEPG:
 		service = self.session.nav.getCurrentService()
 		info = service and service.info()
 		ptr = info and info.getEvent(0)
-		if ptr:
+		if ptr and ptr.getEventName() != "":
 			epglist.append(ptr)
 		ptr = info and info.getEvent(1)
-		if ptr:
+		if ptr and ptr.getEventName() != "":
 			epglist.append(ptr)
 		self.epglist = epglist
 
@@ -4270,7 +4270,7 @@ class InfoBarResolutionSelection:
 		tlist = []
 		tlist.append((_("Exit"), "exit")) 
 		tlist.append((_("Auto(not available)"), "auto"))
-		tlist.append(("Video: " + str(xres) + "x" + str(yres) + "@" + str(fpsFloat) + "hz", ""))
+		tlist.append((_("Video: ") + str(xres) + "x" + str(yres) + "@" + str(fpsFloat) + "hz", ""))
 		tlist.append(("--", ""))
 		if choices != []:
 			for x in choices:
