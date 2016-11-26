@@ -33,10 +33,19 @@ def getAboutText():
 		AboutText += _("Chipset:\t%s") % about.getChipSetString() + "\n"
 
 	cpuMHz = ""
-	if getMachineBuild() in ('vusolo4k') or bootloader == 'v29':
+	if getMachineBuild() in ('vusolo4k'):
 		cpuMHz = "   (1,5 GHz)"
-	elif getMachineBuild() in ('hd52','hd51'):
+	elif getMachineBuild() in ('vuuno4k','vuultimo4k'):
 		cpuMHz = "   (1,7 GHz)"
+	elif getMachineBuild() in ('hd52','hd51','sf4008'):
+		try:
+			import binascii
+			f = open('/sys/firmware/devicetree/base/cpus/cpu@0/clock-frequency', 'rb')
+			clockfrequency = f.read()
+			f.close()
+			cpuMHz = "   (%s MHz)" % str(round(int(binascii.hexlify(clockfrequency), 16)/1000000,1))
+		except:
+			cpuMHz = "   (1,7 GHz)"
 	else:
 		if path.exists('/proc/cpuinfo'):
 			f = open('/proc/cpuinfo', 'r')
@@ -84,7 +93,9 @@ def getAboutText():
 	AboutText += _("GStreamer:\t%s") % about.getGStreamerVersionString() + "\n"
 	AboutText += _("Python:\t%s") % about.getPythonVersionString() + "\n"
 
-	AboutText += _("Installed:\t%s") % about.getFlashDateString() + "\n"
+	if getMachineBuild() not in ('hd51','hd52','vusolo4k','vuuno4k','vuultimo4k','sf4008','dm820','dm7080'):
+		AboutText += _("Installed:\t%s") % about.getFlashDateString() + "\n"
+
 	AboutText += _("Last update:\t%s") % getEnigmaVersionString() + "\n"
 
 	fp_version = getFPVersion()
@@ -296,6 +307,8 @@ class SystemMemoryInfo(Screen):
 			{
 				"cancel": self.close,
 				"ok": self.close,
+				"up": self["AboutScrollLabel"].pageUp,
+				"down": self["AboutScrollLabel"].pageDown,
 			})
 
 		out_lines = file("/proc/meminfo").readlines()

@@ -190,6 +190,22 @@ void eRCDeviceInputDev::handleCode(long rccode)
 	}
 #endif
 
+#if KEY_BOOKMARKS_TO_KEY_MEDIA
+	if (ev->code == KEY_BOOKMARKS)
+	{
+		/* formuler and triplex remote send wrong keycode */
+		ev->code = KEY_MEDIA;
+	}
+#endif
+
+#if KEY_FAV_TO_KEY_PVR
+	if (ev->code == KEY_FAVORITES)
+	{
+		/* tomcat remote dont have a PVR Key. Correct this, so we do not have to place hacks in the keymaps. */
+		ev->code = KEY_PVR;
+	}
+#endif
+
 #if KEY_LAST_TO_KEY_PVR
 	if (ev->code == KEY_LAST)
 	{
